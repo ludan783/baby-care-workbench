@@ -6,7 +6,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="宝宝照护">
-  <meta name="theme-color" content="#FF8FA3">
+  <meta name="theme-color" content="#4DA8FF">
   <title>宝宝日常照护工作台</title>
   <link rel="stylesheet" href="css/style.css">
   <link rel="apple-touch-icon" href="assets/icon.png">
@@ -35,7 +35,7 @@
           <span class="nav-label">喝奶记录</span>
         </li>
         <li class="nav-item" data-page="pumping">
-          <span class="nav-icon">泵奶</span>
+          <span class="nav-icon">🤱</span>
           <span class="nav-label">吸奶记录</span>
         </li>
         <li class="nav-item" data-page="sleep">
@@ -47,7 +47,16 @@
           <span class="nav-label">换尿布</span>
         </li>
         <li class="nav-item" data-page="todo">
-          <span class="nav-icon">✅</span>
+          <span class="nav-icon">📝</span>
+          <span class="nav-label">今日待办</span>
+        </li>
+      </ul>
+
+      <div class="sidebar-footer">
+        <div class="date-display" id="todayDate"></div>
+        <button class="reset-btn" id="resetBtn" title="每日0点自动重置打卡，也可手动重置">🔄 重置打卡</button>
+      </div>
+    </nav>
           <span class="nav-label">今日待办</span>
         </li>
       </ul>
@@ -74,7 +83,7 @@
             <div class="dash-sub" id="dashFeedingDetail">暂无记录</div>
           </div>
           <div class="dash-card pumping" data-jump="pumping">
-            <div class="dash-icon">泵奶</div>
+            <div class="dash-icon">🤱</div>
             <div class="dash-label">吸奶</div>
             <div class="dash-value" id="dashPumping">0 ml</div>
             <div class="dash-sub" id="dashPumpingDetail">今日总量</div>
@@ -92,7 +101,7 @@
             <div class="dash-sub" id="dashDiaperDetail">今日更换</div>
           </div>
           <div class="dash-card todo" data-jump="todo">
-            <div class="dash-icon">✅</div>
+            <div class="dash-icon">📝</div>
             <div class="dash-label">待办</div>
             <div class="dash-value" id="dashTodo">0 / 0</div>
             <div class="dash-sub" id="dashTodoDetail">已完成 / 总数</div>
@@ -199,7 +208,7 @@
       <!-- 吸奶记录页 -->
       <section class="page" id="page-pumping">
         <header class="page-header">
-          <h1>泵奶 吸奶记录</h1>
+          <h1>🤱 吸奶记录</h1>
           <p class="page-subtitle">记录妈妈吸奶 · 自动汇总日总量</p>
         </header>
 
@@ -362,7 +371,7 @@
       <!-- 今日待办页 -->
       <section class="page" id="page-todo">
         <header class="page-header">
-          <h1>✅ 今日待办</h1>
+          <h1>📝 今日待办</h1>
           <p class="page-subtitle">自行添加 · 勾选完成</p>
         </header>
 
