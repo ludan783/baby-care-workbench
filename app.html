@@ -6,24 +6,27 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="宝宝照护">
-  <meta name="theme-color" content="#FF8FA3">
+  <meta name="theme-color" content="#4DA8FF">
   <title>宝宝日常照护工作台</title>
-  <style>/* ===== 全局样式 ===== */
+  <style>/* ===== 全局样式 - 蓝色可爱卡通风格 ===== */
 :root {
-  --primary: #FF8FA3;
-  --primary-light: #FFB3C1;
-  --primary-dark: #E5738A;
-  --bg-main: #FFF5F7;
+  --primary: #4DA8FF;
+  --primary-light: #7FC4FF;
+  --primary-dark: #2B8FE0;
+  --primary-darker: #1A6BB5;
+  --bg-main: #EBF5FF;
   --bg-card: #FFFFFF;
-  --text-main: #3D2C3A;
-  --text-sub: #8B7A88;
-  --border: #FFE0E8;
-  --shadow: 0 2px 12px rgba(255, 143, 163, 0.15);
-  --shadow-hover: 0 4px 20px rgba(255, 143, 163, 0.25);
+  --bg-soft: #F0F8FF;
+  --text-main: #1A3A52;
+  --text-sub: #6B8CA8;
+  --border: #C8E4FF;
+  --shadow: 0 2px 12px rgba(77, 168, 255, 0.15);
+  --shadow-hover: 0 4px 20px rgba(77, 168, 255, 0.25);
   --sidebar-w: 200px;
-  --success: #6BCB77;
+  --success: #4ECDC4;
   --warning: #FFD93D;
-  --info: #4D96FF;
+  --danger: #FF6B9D;
+  --cute-radius: 20px;
 }
 
 * {
@@ -35,8 +38,11 @@
 
 html, body {
   height: 100%;
-  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", "Comic Sans MS", Arial, sans-serif;
   background: var(--bg-main);
+  background-image:
+    radial-gradient(circle at 20% 80%, rgba(127, 196, 255, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(78, 205, 196, 0.1) 0%, transparent 50%);
   color: var(--text-main);
   font-size: 15px;
   line-height: 1.6;
@@ -50,83 +56,107 @@ html, body {
   overflow: hidden;
 }
 
-/* ===== 左侧导航栏 ===== */
+/* ===== 左侧纵向导航栏 ===== */
 .sidebar {
   width: var(--sidebar-w);
-  background: linear-gradient(180deg, #FF8FA3 0%, #FFB3C1 100%);
+  background: linear-gradient(180deg, #4DA8FF 0%, #6BB8FF 50%, #7FC4FF 100%);
   color: #fff;
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
-  box-shadow: 2px 0 12px rgba(255, 143, 163, 0.2);
+  box-shadow: 4px 0 20px rgba(77, 168, 255, 0.25);
   z-index: 10;
+  position: relative;
+}
+
+.sidebar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: -2px;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(180deg, rgba(255,255,255,0.3), transparent);
 }
 
 .sidebar-header {
-  padding: 20px 16px;
+  padding: 24px 16px 16px;
   text-align: center;
-  border-bottom: 1px solid rgba(255,255,255,0.2);
+  border-bottom: 1px solid rgba(255,255,255,0.15);
   position: relative;
 }
 
 .baby-avatar {
-  width: 56px;
-  height: 56px;
+  width: 60px;
+  height: 60px;
   background: rgba(255,255,255,0.25);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 32px;
-  margin: 0 auto 8px;
+  font-size: 34px;
+  margin: 0 auto 10px;
+  border: 3px solid rgba(255,255,255,0.4);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
 .baby-name {
   font-size: 17px;
-  font-weight: 600;
+  font-weight: 700;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.15);
 }
 
 .baby-age {
   font-size: 12px;
-  opacity: 0.85;
-  margin-top: 2px;
+  opacity: 0.9;
+  margin-top: 3px;
+  background: rgba(255,255,255,0.15);
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 10px;
 }
 
 .settings-btn {
   position: absolute;
   top: 16px;
-  right: 12px;
+  right: 10px;
   background: rgba(255,255,255,0.2);
-  border: none;
+  border: 2px solid rgba(255,255,255,0.3);
   color: #fff;
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
-  font-size: 14px;
+  font-size: 15px;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: all 0.2s;
 }
 
 .settings-btn:hover {
-  background: rgba(255,255,255,0.35);
+  background: rgba(255,255,255,0.4);
+  transform: rotate(90deg);
 }
 
 .nav-list {
   list-style: none;
   flex: 1;
   overflow-y: auto;
-  padding: 12px 0;
+  padding: 8px 0;
+}
+
+.nav-list::-webkit-scrollbar {
+  width: 0;
 }
 
 .nav-item {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 14px 20px;
+  padding: 13px 18px;
   cursor: pointer;
-  transition: all 0.2s;
-  border-left: 3px solid transparent;
+  transition: all 0.25s;
+  border-left: 4px solid transparent;
   font-size: 15px;
+  position: relative;
 }
 
 .nav-item:hover {
@@ -134,43 +164,58 @@ html, body {
 }
 
 .nav-item.active {
-  background: rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.22);
   border-left-color: #fff;
-  font-weight: 600;
+  font-weight: 700;
+}
+
+.nav-item.active::after {
+  content: '';
+  position: absolute;
+  right: 12px;
+  width: 6px;
+  height: 6px;
+  background: #fff;
+  border-radius: 50%;
 }
 
 .nav-icon {
-  font-size: 20px;
-  width: 24px;
+  font-size: 22px;
+  width: 28px;
   text-align: center;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.1));
 }
 
 .sidebar-footer {
-  padding: 12px 16px 20px;
-  border-top: 1px solid rgba(255,255,255,0.2);
+  padding: 12px 14px 18px;
+  border-top: 1px solid rgba(255,255,255,0.15);
 }
 
 .date-display {
   font-size: 12px;
-  opacity: 0.85;
+  opacity: 0.9;
   margin-bottom: 8px;
   text-align: center;
+  background: rgba(255,255,255,0.1);
+  padding: 4px 8px;
+  border-radius: 8px;
 }
 
 .reset-btn {
   width: 100%;
-  padding: 8px;
+  padding: 9px;
   background: rgba(255,255,255,0.2);
-  border: 1px solid rgba(255,255,255,0.3);
+  border: 1.5px solid rgba(255,255,255,0.3);
   color: #fff;
-  border-radius: 8px;
+  border-radius: 12px;
   font-size: 13px;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: all 0.2s;
+  font-weight: 600;
 }
 
 .reset-btn:hover {
-  background: rgba(255,255,255,0.3);
+  background: rgba(255,255,255,0.35);
 }
 
 /* ===== 主内容区 ===== */
@@ -193,18 +238,21 @@ html, body {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(8px); }
+  from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 .page-header {
-  margin-bottom: 20px;
+  margin-bottom: 22px;
 }
 
 .page-header h1 {
   font-size: 24px;
-  color: var(--text-main);
+  color: var(--primary-darker);
   margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .page-subtitle {
@@ -222,52 +270,71 @@ html, body {
 
 .dash-card {
   background: var(--bg-card);
-  border-radius: 16px;
+  border-radius: var(--cute-radius);
   padding: 20px;
   text-align: center;
   box-shadow: var(--shadow);
   cursor: pointer;
   transition: all 0.25s;
-  border: 2px solid transparent;
+  border: 3px solid transparent;
+  position: relative;
+  overflow: hidden;
+}
+
+.dash-card::before {
+  content: '';
+  position: absolute;
+  top: -20px;
+  right: -20px;
+  width: 60px;
+  height: 60px;
+  background: var(--bg-soft);
+  border-radius: 50%;
+  opacity: 0.6;
 }
 
 .dash-card:hover {
-  transform: translateY(-3px);
+  transform: translateY(-4px);
   box-shadow: var(--shadow-hover);
   border-color: var(--primary-light);
 }
 
 .dash-icon {
-  font-size: 32px;
+  font-size: 34px;
   margin-bottom: 8px;
+  position: relative;
 }
 
 .dash-label {
   font-size: 13px;
   color: var(--text-sub);
   margin-bottom: 4px;
+  position: relative;
 }
 
 .dash-value {
   font-size: 22px;
   font-weight: 700;
-  color: var(--primary-dark);
+  color: var(--primary-darker);
+  position: relative;
 }
 
 .dash-sub {
   font-size: 12px;
   color: var(--text-sub);
   margin-top: 4px;
+  position: relative;
 }
 
 .timeline-section h2 {
   font-size: 18px;
   margin-bottom: 12px;
+  color: var(--primary-darker);
 }
 
 .timeline {
   background: var(--bg-card);
-  border-radius: 16px;
+  border-radius: var(--cute-radius);
   padding: 16px;
   box-shadow: var(--shadow);
 }
@@ -277,7 +344,7 @@ html, body {
   align-items: flex-start;
   gap: 12px;
   padding: 10px 0;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 2px dashed var(--border);
 }
 
 .timeline-item:last-child {
@@ -286,10 +353,13 @@ html, body {
 
 .timeline-time {
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--primary-dark);
   white-space: nowrap;
   min-width: 52px;
+  background: var(--bg-soft);
+  padding: 2px 8px;
+  border-radius: 8px;
 }
 
 .timeline-content {
@@ -298,28 +368,23 @@ html, body {
   flex: 1;
 }
 
-.timeline-tag {
-  display: inline-block;
-  padding: 2px 8px;
-  border-radius: 10px;
-  font-size: 12px;
-  margin-right: 6px;
-  font-weight: 500;
-}
-
 /* ===== 表单卡片 ===== */
 .form-card {
   background: var(--bg-card);
-  border-radius: 16px;
+  border-radius: var(--cute-radius);
   padding: 24px;
   box-shadow: var(--shadow);
   margin-bottom: 20px;
+  border: 2px solid var(--border);
 }
 
 .form-card h3 {
   font-size: 17px;
   margin-bottom: 16px;
-  color: var(--text-main);
+  color: var(--primary-darker);
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .form-row {
@@ -331,24 +396,26 @@ html, body {
   font-size: 13px;
   color: var(--text-sub);
   margin-bottom: 8px;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .time-input, .text-input, .number-input {
   width: 100%;
   padding: 10px 14px;
-  border: 1.5px solid var(--border);
-  border-radius: 10px;
+  border: 2px solid var(--border);
+  border-radius: 12px;
   font-size: 15px;
   color: var(--text-main);
-  background: #FFFBFC;
-  transition: border-color 0.2s;
+  background: var(--bg-soft);
+  transition: all 0.2s;
   font-family: inherit;
 }
 
 .time-input:focus, .text-input:focus, .number-input:focus {
   outline: none;
   border-color: var(--primary);
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(77, 168, 255, 0.15);
 }
 
 /* 分段选择器 */
@@ -360,25 +427,28 @@ html, body {
 
 .seg-btn {
   padding: 8px 16px;
-  border: 1.5px solid var(--border);
-  background: #FFFBFC;
+  border: 2px solid var(--border);
+  background: var(--bg-soft);
   color: var(--text-sub);
-  border-radius: 10px;
+  border-radius: 12px;
   font-size: 14px;
   cursor: pointer;
   transition: all 0.2s;
   font-family: inherit;
+  font-weight: 500;
 }
 
 .seg-btn:hover {
   border-color: var(--primary-light);
+  transform: translateY(-1px);
 }
 
 .seg-btn.active {
-  background: var(--primary);
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
   color: #fff;
-  border-color: var(--primary);
-  font-weight: 600;
+  border-color: var(--primary-dark);
+  font-weight: 700;
+  box-shadow: 0 3px 10px rgba(77, 168, 255, 0.35);
 }
 
 /* 数字输入 */
@@ -389,22 +459,24 @@ html, body {
 }
 
 .num-btn {
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
-  border: 1.5px solid var(--border);
-  background: #FFFBFC;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  border: 2px solid var(--border);
+  background: var(--bg-soft);
   color: var(--primary-dark);
-  font-size: 20px;
+  font-size: 22px;
   cursor: pointer;
   transition: all 0.2s;
   font-family: inherit;
+  font-weight: 700;
 }
 
 .num-btn:hover {
-  background: var(--primary-light);
+  background: var(--primary);
   color: #fff;
-  border-color: var(--primary-light);
+  border-color: var(--primary-dark);
+  transform: scale(1.05);
 }
 
 .number-input {
@@ -421,14 +493,15 @@ html, body {
 
 .duration-btn {
   padding: 8px 14px;
-  border: 1.5px solid var(--border);
-  background: #FFFBFC;
+  border: 2px solid var(--border);
+  background: var(--bg-soft);
   color: var(--text-sub);
-  border-radius: 10px;
+  border-radius: 12px;
   font-size: 13px;
   cursor: pointer;
   transition: all 0.2s;
   font-family: inherit;
+  font-weight: 500;
 }
 
 .duration-btn:hover {
@@ -436,36 +509,38 @@ html, body {
 }
 
 .duration-btn.active {
-  background: var(--primary);
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
   color: #fff;
-  border-color: var(--primary);
+  border-color: var(--primary-dark);
+  font-weight: 700;
 }
 
 .total-display {
   font-size: 20px;
   font-weight: 700;
-  color: var(--primary-dark);
+  color: var(--primary-darker);
   padding: 8px 0;
 }
 
 .submit-btn {
   width: 100%;
-  padding: 12px;
+  padding: 13px;
   background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
   color: #fff;
   border: none;
-  border-radius: 12px;
+  border-radius: 14px;
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
   transition: all 0.2s;
   font-family: inherit;
   margin-top: 4px;
+  box-shadow: 0 3px 12px rgba(77, 168, 255, 0.3);
 }
 
 .submit-btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(255, 143, 163, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(77, 168, 255, 0.4);
 }
 
 .submit-btn:active {
@@ -484,16 +559,17 @@ html, body {
   flex-wrap: wrap;
   gap: 16px;
   background: var(--bg-card);
-  border-radius: 12px;
+  border-radius: 14px;
   padding: 14px 20px;
   box-shadow: var(--shadow);
   margin-bottom: 16px;
   font-size: 14px;
   color: var(--text-sub);
+  border: 2px solid var(--border);
 }
 
 .summary-bar strong {
-  color: var(--primary-dark);
+  color: var(--primary-darker);
   font-size: 18px;
   margin: 0 2px;
 }
@@ -507,7 +583,7 @@ html, body {
 
 .record-item {
   background: var(--bg-card);
-  border-radius: 12px;
+  border-radius: 14px;
   padding: 14px 18px;
   box-shadow: var(--shadow);
   display: flex;
@@ -515,6 +591,7 @@ html, body {
   justify-content: space-between;
   transition: all 0.2s;
   animation: slideIn 0.3s ease;
+  border: 2px solid var(--border);
 }
 
 @keyframes slideIn {
@@ -524,6 +601,7 @@ html, body {
 
 .record-item:hover {
   box-shadow: var(--shadow-hover);
+  border-color: var(--primary-light);
 }
 
 .record-main {
@@ -534,6 +612,7 @@ html, body {
   font-size: 13px;
   color: var(--text-sub);
   margin-bottom: 4px;
+  font-weight: 600;
 }
 
 .record-detail {
@@ -551,39 +630,39 @@ html, body {
 
 .tag {
   display: inline-block;
-  padding: 2px 8px;
-  border-radius: 8px;
+  padding: 2px 10px;
+  border-radius: 10px;
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 600;
 }
 
-.tag-breast { background: #FFE0EC; color: #D63384; }
-.tag-formula { background: #FFF3CD; color: #B8860B; }
-.tag-left { background: #D1ECF9; color: #0C5460; }
-.tag-right { background: #D4EDDA; color: #155724; }
-.tag-wet { background: #D1ECF9; color: #0C5460; }
-.tag-dirty { background: #FFF3CD; color: #856404; }
-.tag-mix { background: #E2D9F3; color: #6F42C1; }
-.tag-leak { background: #F8D7DA; color: #721C24; }
-.tag-cry { background: #F8D7DA; color: #721C24; }
-.tag-nocry { background: #D4EDDA; color: #155724; }
-.tag-method { background: #E7F5FF; color: #1971C2; }
-.tag-helper { background: #FFF0F6; color: #C2255C; }
+.tag-breast { background: #E3F2FF; color: #1565C0; }
+.tag-formula { background: #FFF3E0; color: #E65100; }
+.tag-left { background: #E0F7FA; color: #006064; }
+.tag-right { background: #E8F5E9; color: #1B5E20; }
+.tag-wet { background: #E0F7FA; color: #006064; }
+.tag-dirty { background: #FFF3E0; color: #E65100; }
+.tag-mix { background: #F3E5F5; color: #6A1B9A; }
+.tag-leak { background: #FCE4EC; color: #AD1457; }
+.tag-cry { background: #FCE4EC; color: #C62828; }
+.tag-nocry { background: #E8F5E9; color: #2E7D32; }
+.tag-method { background: #E3F2FD; color: #1565C0; }
+.tag-helper { background: #F3E5F5; color: #7B1FA2; }
 
 .delete-btn {
   background: none;
   border: none;
-  color: #ccc;
+  color: #B0BEC5;
   font-size: 20px;
   cursor: pointer;
   padding: 4px 8px;
-  border-radius: 6px;
+  border-radius: 8px;
   transition: all 0.2s;
 }
 
 .delete-btn:hover {
-  color: #ff6b6b;
-  background: #fff0f0;
+  color: var(--danger);
+  background: #FCE4EC;
 }
 
 /* ===== 待办列表 ===== */
@@ -605,25 +684,27 @@ html, body {
 
 .quick-tag {
   padding: 6px 12px;
-  background: #FFF0F6;
-  border: 1.5px dashed var(--primary-light);
-  color: var(--primary-dark);
-  border-radius: 16px;
+  background: #E3F2FF;
+  border: 2px dashed var(--primary-light);
+  color: var(--primary-darker);
+  border-radius: 18px;
   font-size: 13px;
   cursor: pointer;
   transition: all 0.2s;
   font-family: inherit;
+  font-weight: 500;
 }
 
 .quick-tag:hover {
   background: var(--primary);
   color: #fff;
   border-style: solid;
+  transform: translateY(-1px);
 }
 
 .todo-item {
   background: var(--bg-card);
-  border-radius: 12px;
+  border-radius: 14px;
   padding: 14px 18px;
   box-shadow: var(--shadow);
   display: flex;
@@ -631,12 +712,13 @@ html, body {
   gap: 12px;
   transition: all 0.2s;
   animation: slideIn 0.3s ease;
+  border: 2px solid var(--border);
 }
 
 .todo-check {
-  width: 24px;
-  height: 24px;
-  border: 2px solid var(--border);
+  width: 26px;
+  height: 26px;
+  border: 2.5px solid var(--border);
   border-radius: 50%;
   cursor: pointer;
   display: flex;
@@ -644,18 +726,19 @@ html, body {
   justify-content: center;
   flex-shrink: 0;
   transition: all 0.2s;
-  background: #FFFBFC;
+  background: var(--bg-soft);
 }
 
 .todo-check.done {
   background: var(--success);
   border-color: var(--success);
   color: #fff;
+  transform: scale(1.05);
 }
 
 .todo-check.done::after {
   content: "✓";
-  font-size: 14px;
+  font-size: 15px;
   font-weight: bold;
 }
 
@@ -678,12 +761,12 @@ html, body {
 /* ===== 空状态 ===== */
 .empty-state {
   text-align: center;
-  padding: 32px 16px;
+  padding: 36px 16px;
   color: var(--text-sub);
   font-size: 14px;
   background: var(--bg-card);
-  border-radius: 12px;
-  border: 2px dashed var(--border);
+  border-radius: 14px;
+  border: 3px dashed var(--border);
 }
 
 /* ===== 弹窗 ===== */
@@ -691,11 +774,12 @@ html, body {
   display: none;
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.4);
+  background: rgba(26, 58, 82, 0.4);
   z-index: 100;
   align-items: center;
   justify-content: center;
   animation: fadeIn 0.2s ease;
+  backdrop-filter: blur(4px);
 }
 
 .modal-overlay.show {
@@ -704,16 +788,18 @@ html, body {
 
 .modal {
   background: #fff;
-  border-radius: 20px;
+  border-radius: 24px;
   padding: 28px;
   width: 90%;
   max-width: 380px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+  box-shadow: 0 8px 40px rgba(77, 168, 255, 0.3);
+  border: 3px solid var(--border);
 }
 
 .modal h3 {
   font-size: 18px;
   margin-bottom: 20px;
+  color: var(--primary-darker);
 }
 
 .modal-actions {
@@ -724,14 +810,15 @@ html, body {
 
 .cancel-btn {
   flex: 1;
-  padding: 10px;
-  background: #f0f0f0;
+  padding: 11px;
+  background: #ECEFF1;
   border: none;
-  border-radius: 10px;
+  border-radius: 12px;
   color: var(--text-sub);
   font-size: 15px;
   cursor: pointer;
   font-family: inherit;
+  font-weight: 600;
 }
 
 /* ===== Toast ===== */
@@ -740,16 +827,18 @@ html, body {
   bottom: 24px;
   left: 50%;
   transform: translateX(-50%) translateY(100px);
-  background: rgba(61, 44, 58, 0.92);
+  background: linear-gradient(135deg, var(--primary-darker), var(--primary-dark));
   color: #fff;
-  padding: 12px 24px;
-  border-radius: 24px;
+  padding: 12px 26px;
+  border-radius: 26px;
   font-size: 14px;
   z-index: 200;
   opacity: 0;
   transition: all 0.3s ease;
   pointer-events: none;
   white-space: nowrap;
+  box-shadow: 0 4px 20px rgba(77, 168, 255, 0.4);
+  font-weight: 600;
 }
 
 .toast.show {
@@ -762,39 +851,29 @@ html, body {
   display: none !important;
 }
 
-/* ===== 响应式适配（iPhone等窄屏） ===== */
+/* ===== 响应式适配（iPhone等窄屏 - 保持左侧纵向导航栏） ===== */
 @media (max-width: 640px) {
   .app-container {
-    flex-direction: column;
+    flex-direction: row;
   }
 
   .sidebar {
-    width: 100%;
-    flex-direction: row;
-    align-items: stretch;
+    width: 68px;
+    flex-direction: column;
     padding: 0;
-    height: 56px;
-    flex-shrink: 0;
-    overflow-x: auto;
   }
 
   .sidebar-header {
-    padding: 0 12px;
-    border-bottom: none;
-    border-right: 1px solid rgba(255,255,255,0.2);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-shrink: 0;
-    min-width: 64px;
+    padding: 16px 4px 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.15);
   }
 
   .baby-avatar {
-    width: 36px;
-    height: 36px;
-    font-size: 22px;
-    margin: 0;
-    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    font-size: 24px;
+    margin: 0 auto;
+    border-width: 2px;
   }
 
   .baby-info {
@@ -803,49 +882,65 @@ html, body {
 
   .settings-btn {
     position: static;
-    width: 32px;
-    height: 32px;
-    margin-left: 4px;
+    width: 28px;
+    height: 28px;
+    font-size: 13px;
+    margin: 8px auto 0;
+    display: block;
   }
 
   .nav-list {
     display: flex;
-    flex-direction: row;
-    padding: 0;
+    flex-direction: column;
+    padding: 4px 0;
     flex: 1;
-    overflow-x: auto;
-    align-items: stretch;
   }
 
   .nav-item {
-    display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 6px 10px;
+    padding: 10px 4px;
     border-left: none;
-    border-bottom: 3px solid transparent;
-    white-space: nowrap;
-    flex-shrink: 0;
-    font-size: 11px;
-    gap: 2px;
-    min-width: 64px;
+    border-right: 4px solid transparent;
+    font-size: 10px;
+    gap: 3px;
+    min-height: 58px;
   }
 
   .nav-item.active {
-    border-bottom-color: #fff;
+    border-left: none;
+    border-right-color: #fff;
+    background: rgba(255,255,255,0.22);
+  }
+
+  .nav-item.active::after {
+    display: none;
   }
 
   .nav-label {
-    font-size: 11px;
+    font-size: 10px;
+    text-align: center;
+    line-height: 1.2;
   }
 
   .nav-icon {
-    font-size: 18px;
+    font-size: 22px;
   }
 
   .sidebar-footer {
+    padding: 8px 4px 12px;
+  }
+
+  .date-display {
     display: none;
+  }
+
+  .reset-btn {
+    padding: 6px 4px;
+    font-size: 16px;
+    text-align: center;
+    line-height: 1;
   }
 
   .main-content {
@@ -867,7 +962,7 @@ html, body {
   }
 
   .dash-icon {
-    font-size: 24px;
+    font-size: 26px;
   }
 
   .dash-value {
@@ -895,9 +990,21 @@ html, body {
   .dashboard-grid {
     grid-template-columns: 1fr 1fr;
   }
+
+  .sidebar {
+    width: 60px;
+  }
+
+  .nav-item {
+    min-height: 52px;
+  }
+
+  .nav-label {
+    font-size: 9px;
+  }
 }
 </style>
-  <link rel="apple-touch-icon" href="data:image/png;base64,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">
+  <link rel="apple-touch-icon" href="data:image/png;base64,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">
   
 </head>
 <body>
@@ -923,7 +1030,7 @@ html, body {
           <span class="nav-label">喝奶记录</span>
         </li>
         <li class="nav-item" data-page="pumping">
-          <span class="nav-icon">泵奶</span>
+          <span class="nav-icon">🤱</span>
           <span class="nav-label">吸奶记录</span>
         </li>
         <li class="nav-item" data-page="sleep">
@@ -935,7 +1042,16 @@ html, body {
           <span class="nav-label">换尿布</span>
         </li>
         <li class="nav-item" data-page="todo">
-          <span class="nav-icon">✅</span>
+          <span class="nav-icon">📝</span>
+          <span class="nav-label">今日待办</span>
+        </li>
+      </ul>
+
+      <div class="sidebar-footer">
+        <div class="date-display" id="todayDate"></div>
+        <button class="reset-btn" id="resetBtn" title="每日0点自动重置打卡，也可手动重置">🔄 重置打卡</button>
+      </div>
+    </nav>
           <span class="nav-label">今日待办</span>
         </li>
       </ul>
@@ -962,7 +1078,7 @@ html, body {
             <div class="dash-sub" id="dashFeedingDetail">暂无记录</div>
           </div>
           <div class="dash-card pumping" data-jump="pumping">
-            <div class="dash-icon">泵奶</div>
+            <div class="dash-icon">🤱</div>
             <div class="dash-label">吸奶</div>
             <div class="dash-value" id="dashPumping">0 ml</div>
             <div class="dash-sub" id="dashPumpingDetail">今日总量</div>
@@ -980,7 +1096,7 @@ html, body {
             <div class="dash-sub" id="dashDiaperDetail">今日更换</div>
           </div>
           <div class="dash-card todo" data-jump="todo">
-            <div class="dash-icon">✅</div>
+            <div class="dash-icon">📝</div>
             <div class="dash-label">待办</div>
             <div class="dash-value" id="dashTodo">0 / 0</div>
             <div class="dash-sub" id="dashTodoDetail">已完成 / 总数</div>
@@ -1087,7 +1203,7 @@ html, body {
       <!-- 吸奶记录页 -->
       <section class="page" id="page-pumping">
         <header class="page-header">
-          <h1>泵奶 吸奶记录</h1>
+          <h1>🤱 吸奶记录</h1>
           <p class="page-subtitle">记录妈妈吸奶 · 自动汇总日总量</p>
         </header>
 
@@ -1250,7 +1366,7 @@ html, body {
       <!-- 今日待办页 -->
       <section class="page" id="page-todo">
         <header class="page-header">
-          <h1>✅ 今日待办</h1>
+          <h1>📝 今日待办</h1>
           <p class="page-subtitle">自行添加 · 勾选完成</p>
         </header>
 
@@ -2066,7 +2182,7 @@ function init() {
 document.addEventListener('DOMContentLoaded', init);
 
 // ===== Service Worker 注册（实现离线访问） =====
-// SW removed for single-file version
+// SW removed for single-file
 </script>
 </body>
 </html>
