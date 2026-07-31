@@ -1,0 +1,24 @@
+{
+  "name": "宝宝日常照护工作台",
+  "short_name": "宝宝照护",
+  "description": "喝奶/吸奶/睡眠/尿布/待办记录，数据本地留存，每日自动重置",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#FFF5F7",
+  "theme_color": "#FF8FA3",
+  "icons": [
+    {
+      "src": "assets/icon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
