@@ -754,3 +754,14 @@ function init() {
 
 // 启动
 document.addEventListener('DOMContentLoaded', init);
+
+// ===== Service Worker 注册（实现离线访问） =====
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').then((reg) => {
+      console.log('Service Worker 已注册，离线缓存已启用');
+    }).catch((err) => {
+      console.log('Service Worker 注册失败:', err);
+    });
+  });
+}
