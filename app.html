@@ -1,0 +1,2072 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="宝宝照护">
+  <meta name="theme-color" content="#FF8FA3">
+  <title>宝宝日常照护工作台</title>
+  <style>/* ===== 全局样式 ===== */
+:root {
+  --primary: #FF8FA3;
+  --primary-light: #FFB3C1;
+  --primary-dark: #E5738A;
+  --bg-main: #FFF5F7;
+  --bg-card: #FFFFFF;
+  --text-main: #3D2C3A;
+  --text-sub: #8B7A88;
+  --border: #FFE0E8;
+  --shadow: 0 2px 12px rgba(255, 143, 163, 0.15);
+  --shadow-hover: 0 4px 20px rgba(255, 143, 163, 0.25);
+  --sidebar-w: 200px;
+  --success: #6BCB77;
+  --warning: #FFD93D;
+  --info: #4D96FF;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", Arial, sans-serif;
+  background: var(--bg-main);
+  color: var(--text-main);
+  font-size: 15px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+.app-container {
+  display: flex;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+}
+
+/* ===== 左侧导航栏 ===== */
+.sidebar {
+  width: var(--sidebar-w);
+  background: linear-gradient(180deg, #FF8FA3 0%, #FFB3C1 100%);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  box-shadow: 2px 0 12px rgba(255, 143, 163, 0.2);
+  z-index: 10;
+}
+
+.sidebar-header {
+  padding: 20px 16px;
+  text-align: center;
+  border-bottom: 1px solid rgba(255,255,255,0.2);
+  position: relative;
+}
+
+.baby-avatar {
+  width: 56px;
+  height: 56px;
+  background: rgba(255,255,255,0.25);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  margin: 0 auto 8px;
+}
+
+.baby-name {
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.baby-age {
+  font-size: 12px;
+  opacity: 0.85;
+  margin-top: 2px;
+}
+
+.settings-btn {
+  position: absolute;
+  top: 16px;
+  right: 12px;
+  background: rgba(255,255,255,0.2);
+  border: none;
+  color: #fff;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.settings-btn:hover {
+  background: rgba(255,255,255,0.35);
+}
+
+.nav-list {
+  list-style: none;
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px 0;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+  border-left: 3px solid transparent;
+  font-size: 15px;
+}
+
+.nav-item:hover {
+  background: rgba(255,255,255,0.12);
+}
+
+.nav-item.active {
+  background: rgba(255,255,255,0.2);
+  border-left-color: #fff;
+  font-weight: 600;
+}
+
+.nav-icon {
+  font-size: 20px;
+  width: 24px;
+  text-align: center;
+}
+
+.sidebar-footer {
+  padding: 12px 16px 20px;
+  border-top: 1px solid rgba(255,255,255,0.2);
+}
+
+.date-display {
+  font-size: 12px;
+  opacity: 0.85;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.reset-btn {
+  width: 100%;
+  padding: 8px;
+  background: rgba(255,255,255,0.2);
+  border: 1px solid rgba(255,255,255,0.3);
+  color: #fff;
+  border-radius: 8px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.reset-btn:hover {
+  background: rgba(255,255,255,0.3);
+}
+
+/* ===== 主内容区 ===== */
+.main-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px 32px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.page {
+  display: none;
+  max-width: 720px;
+  margin: 0 auto;
+  animation: fadeIn 0.3s ease;
+}
+
+.page.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.page-header {
+  margin-bottom: 20px;
+}
+
+.page-header h1 {
+  font-size: 24px;
+  color: var(--text-main);
+  margin-bottom: 4px;
+}
+
+.page-subtitle {
+  font-size: 13px;
+  color: var(--text-sub);
+}
+
+/* ===== 今日概览 ===== */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.dash-card {
+  background: var(--bg-card);
+  border-radius: 16px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  transition: all 0.25s;
+  border: 2px solid transparent;
+}
+
+.dash-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-hover);
+  border-color: var(--primary-light);
+}
+
+.dash-icon {
+  font-size: 32px;
+  margin-bottom: 8px;
+}
+
+.dash-label {
+  font-size: 13px;
+  color: var(--text-sub);
+  margin-bottom: 4px;
+}
+
+.dash-value {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--primary-dark);
+}
+
+.dash-sub {
+  font-size: 12px;
+  color: var(--text-sub);
+  margin-top: 4px;
+}
+
+.timeline-section h2 {
+  font-size: 18px;
+  margin-bottom: 12px;
+}
+
+.timeline {
+  background: var(--bg-card);
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: var(--shadow);
+}
+
+.timeline-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.timeline-item:last-child {
+  border-bottom: none;
+}
+
+.timeline-time {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--primary-dark);
+  white-space: nowrap;
+  min-width: 52px;
+}
+
+.timeline-content {
+  font-size: 14px;
+  color: var(--text-main);
+  flex: 1;
+}
+
+.timeline-tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 12px;
+  margin-right: 6px;
+  font-weight: 500;
+}
+
+/* ===== 表单卡片 ===== */
+.form-card {
+  background: var(--bg-card);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: var(--shadow);
+  margin-bottom: 20px;
+}
+
+.form-card h3 {
+  font-size: 17px;
+  margin-bottom: 16px;
+  color: var(--text-main);
+}
+
+.form-row {
+  margin-bottom: 16px;
+}
+
+.form-row > label {
+  display: block;
+  font-size: 13px;
+  color: var(--text-sub);
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.time-input, .text-input, .number-input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  font-size: 15px;
+  color: var(--text-main);
+  background: #FFFBFC;
+  transition: border-color 0.2s;
+  font-family: inherit;
+}
+
+.time-input:focus, .text-input:focus, .number-input:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+/* 分段选择器 */
+.segmented {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.seg-btn {
+  padding: 8px 16px;
+  border: 1.5px solid var(--border);
+  background: #FFFBFC;
+  color: var(--text-sub);
+  border-radius: 10px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.seg-btn:hover {
+  border-color: var(--primary-light);
+}
+
+.seg-btn.active {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+  font-weight: 600;
+}
+
+/* 数字输入 */
+.number-input-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.num-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  border: 1.5px solid var(--border);
+  background: #FFFBFC;
+  color: var(--primary-dark);
+  font-size: 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.num-btn:hover {
+  background: var(--primary-light);
+  color: #fff;
+  border-color: var(--primary-light);
+}
+
+.number-input {
+  text-align: center;
+  flex: 1;
+}
+
+/* 时长选择 */
+.duration-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.duration-btn {
+  padding: 8px 14px;
+  border: 1.5px solid var(--border);
+  background: #FFFBFC;
+  color: var(--text-sub);
+  border-radius: 10px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.duration-btn:hover {
+  border-color: var(--primary-light);
+}
+
+.duration-btn.active {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+
+.total-display {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--primary-dark);
+  padding: 8px 0;
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+  margin-top: 4px;
+}
+
+.submit-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(255, 143, 163, 0.4);
+}
+
+.submit-btn:active {
+  transform: translateY(0);
+}
+
+.submit-btn.inline {
+  width: auto;
+  padding: 10px 20px;
+  margin-top: 0;
+}
+
+/* ===== 汇总栏 ===== */
+.summary-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  background: var(--bg-card);
+  border-radius: 12px;
+  padding: 14px 20px;
+  box-shadow: var(--shadow);
+  margin-bottom: 16px;
+  font-size: 14px;
+  color: var(--text-sub);
+}
+
+.summary-bar strong {
+  color: var(--primary-dark);
+  font-size: 18px;
+  margin: 0 2px;
+}
+
+/* ===== 记录列表 ===== */
+.record-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.record-item {
+  background: var(--bg-card);
+  border-radius: 12px;
+  padding: 14px 18px;
+  box-shadow: var(--shadow);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: all 0.2s;
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(-12px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.record-item:hover {
+  box-shadow: var(--shadow-hover);
+}
+
+.record-main {
+  flex: 1;
+}
+
+.record-time {
+  font-size: 13px;
+  color: var(--text-sub);
+  margin-bottom: 4px;
+}
+
+.record-detail {
+  font-size: 15px;
+  color: var(--text-main);
+  font-weight: 500;
+}
+
+.record-tags {
+  display: flex;
+  gap: 6px;
+  margin-top: 4px;
+  flex-wrap: wrap;
+}
+
+.tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.tag-breast { background: #FFE0EC; color: #D63384; }
+.tag-formula { background: #FFF3CD; color: #B8860B; }
+.tag-left { background: #D1ECF9; color: #0C5460; }
+.tag-right { background: #D4EDDA; color: #155724; }
+.tag-wet { background: #D1ECF9; color: #0C5460; }
+.tag-dirty { background: #FFF3CD; color: #856404; }
+.tag-mix { background: #E2D9F3; color: #6F42C1; }
+.tag-leak { background: #F8D7DA; color: #721C24; }
+.tag-cry { background: #F8D7DA; color: #721C24; }
+.tag-nocry { background: #D4EDDA; color: #155724; }
+.tag-method { background: #E7F5FF; color: #1971C2; }
+.tag-helper { background: #FFF0F6; color: #C2255C; }
+
+.delete-btn {
+  background: none;
+  border: none;
+  color: #ccc;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.delete-btn:hover {
+  color: #ff6b6b;
+  background: #fff0f0;
+}
+
+/* ===== 待办列表 ===== */
+.todo-input-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.todo-input-row .text-input {
+  flex: 1;
+}
+
+.quick-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.quick-tag {
+  padding: 6px 12px;
+  background: #FFF0F6;
+  border: 1.5px dashed var(--primary-light);
+  color: var(--primary-dark);
+  border-radius: 16px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.quick-tag:hover {
+  background: var(--primary);
+  color: #fff;
+  border-style: solid;
+}
+
+.todo-item {
+  background: var(--bg-card);
+  border-radius: 12px;
+  padding: 14px 18px;
+  box-shadow: var(--shadow);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: all 0.2s;
+  animation: slideIn 0.3s ease;
+}
+
+.todo-check {
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--border);
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s;
+  background: #FFFBFC;
+}
+
+.todo-check.done {
+  background: var(--success);
+  border-color: var(--success);
+  color: #fff;
+}
+
+.todo-check.done::after {
+  content: "✓";
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.todo-text {
+  flex: 1;
+  font-size: 15px;
+  color: var(--text-main);
+}
+
+.todo-item.done .todo-text {
+  text-decoration: line-through;
+  color: var(--text-sub);
+}
+
+.todo-time {
+  font-size: 12px;
+  color: var(--text-sub);
+}
+
+/* ===== 空状态 ===== */
+.empty-state {
+  text-align: center;
+  padding: 32px 16px;
+  color: var(--text-sub);
+  font-size: 14px;
+  background: var(--bg-card);
+  border-radius: 12px;
+  border: 2px dashed var(--border);
+}
+
+/* ===== 弹窗 ===== */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 100;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.2s ease;
+}
+
+.modal-overlay.show {
+  display: flex;
+}
+
+.modal {
+  background: #fff;
+  border-radius: 20px;
+  padding: 28px;
+  width: 90%;
+  max-width: 380px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+}
+
+.modal h3 {
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.cancel-btn {
+  flex: 1;
+  padding: 10px;
+  background: #f0f0f0;
+  border: none;
+  border-radius: 10px;
+  color: var(--text-sub);
+  font-size: 15px;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+/* ===== Toast ===== */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: rgba(61, 44, 58, 0.92);
+  color: #fff;
+  padding: 12px 24px;
+  border-radius: 24px;
+  font-size: 14px;
+  z-index: 200;
+  opacity: 0;
+  transition: all 0.3s ease;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.toast.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+/* ===== 工具类 ===== */
+.hidden {
+  display: none !important;
+}
+
+/* ===== 响应式适配（iPhone等窄屏） ===== */
+@media (max-width: 640px) {
+  .app-container {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    flex-direction: row;
+    align-items: stretch;
+    padding: 0;
+    height: 56px;
+    flex-shrink: 0;
+    overflow-x: auto;
+  }
+
+  .sidebar-header {
+    padding: 0 12px;
+    border-bottom: none;
+    border-right: 1px solid rgba(255,255,255,0.2);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+    min-width: 64px;
+  }
+
+  .baby-avatar {
+    width: 36px;
+    height: 36px;
+    font-size: 22px;
+    margin: 0;
+    flex-shrink: 0;
+  }
+
+  .baby-info {
+    display: none;
+  }
+
+  .settings-btn {
+    position: static;
+    width: 32px;
+    height: 32px;
+    margin-left: 4px;
+  }
+
+  .nav-list {
+    display: flex;
+    flex-direction: row;
+    padding: 0;
+    flex: 1;
+    overflow-x: auto;
+    align-items: stretch;
+  }
+
+  .nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 10px;
+    border-left: none;
+    border-bottom: 3px solid transparent;
+    white-space: nowrap;
+    flex-shrink: 0;
+    font-size: 11px;
+    gap: 2px;
+    min-width: 64px;
+  }
+
+  .nav-item.active {
+    border-bottom-color: #fff;
+  }
+
+  .nav-label {
+    font-size: 11px;
+  }
+
+  .nav-icon {
+    font-size: 18px;
+  }
+
+  .sidebar-footer {
+    display: none;
+  }
+
+  .main-content {
+    padding: 16px;
+    flex: 1;
+  }
+
+  .page-header h1 {
+    font-size: 20px;
+  }
+
+  .dashboard-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .dash-card {
+    padding: 14px;
+  }
+
+  .dash-icon {
+    font-size: 24px;
+  }
+
+  .dash-value {
+    font-size: 18px;
+  }
+
+  .form-card {
+    padding: 16px;
+  }
+
+  .summary-bar {
+    gap: 10px;
+    padding: 12px;
+    font-size: 13px;
+  }
+
+  .seg-btn {
+    padding: 7px 12px;
+    font-size: 13px;
+  }
+}
+
+/* iPhone SE 等超小屏 */
+@media (max-width: 375px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+</style>
+  <link rel="apple-touch-icon" href="data:image/png;base64,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">
+  
+</head>
+<body>
+  <div class="app-container">
+    <!-- 左侧纵向导航栏 -->
+    <nav class="sidebar">
+      <div class="sidebar-header">
+        <div class="baby-avatar">👶</div>
+        <div class="baby-info">
+          <div class="baby-name" id="babyName">宝宝</div>
+          <div class="baby-age" id="babyAge">点击设置</div>
+        </div>
+        <button class="settings-btn" id="settingsBtn" title="设置">⚙️</button>
+      </div>
+
+      <ul class="nav-list">
+        <li class="nav-item active" data-page="dashboard">
+          <span class="nav-icon">🏠</span>
+          <span class="nav-label">今日概览</span>
+        </li>
+        <li class="nav-item" data-page="feeding">
+          <span class="nav-icon">🍼</span>
+          <span class="nav-label">喝奶记录</span>
+        </li>
+        <li class="nav-item" data-page="pumping">
+          <span class="nav-icon">泵奶</span>
+          <span class="nav-label">吸奶记录</span>
+        </li>
+        <li class="nav-item" data-page="sleep">
+          <span class="nav-icon">😴</span>
+          <span class="nav-label">睡眠记录</span>
+        </li>
+        <li class="nav-item" data-page="diaper">
+          <span class="nav-icon">🧷</span>
+          <span class="nav-label">换尿布</span>
+        </li>
+        <li class="nav-item" data-page="todo">
+          <span class="nav-icon">✅</span>
+          <span class="nav-label">今日待办</span>
+        </li>
+      </ul>
+
+      <div class="sidebar-footer">
+        <div class="date-display" id="todayDate"></div>
+        <button class="reset-btn" id="resetBtn" title="每日0点自动重置打卡，也可手动重置">🔄 重置打卡</button>
+      </div>
+    </nav>
+
+    <!-- 主内容区 -->
+    <main class="main-content">
+      <!-- 今日概览页 -->
+      <section class="page active" id="page-dashboard">
+        <header class="page-header">
+          <h1>今日概览</h1>
+          <p class="page-subtitle">宝宝的一日动态一目了然</p>
+        </header>
+        <div class="dashboard-grid">
+          <div class="dash-card feeding" data-jump="feeding">
+            <div class="dash-icon">🍼</div>
+            <div class="dash-label">喝奶</div>
+            <div class="dash-value" id="dashFeeding">0 次</div>
+            <div class="dash-sub" id="dashFeedingDetail">暂无记录</div>
+          </div>
+          <div class="dash-card pumping" data-jump="pumping">
+            <div class="dash-icon">泵奶</div>
+            <div class="dash-label">吸奶</div>
+            <div class="dash-value" id="dashPumping">0 ml</div>
+            <div class="dash-sub" id="dashPumpingDetail">今日总量</div>
+          </div>
+          <div class="dash-card sleep" data-jump="sleep">
+            <div class="dash-icon">😴</div>
+            <div class="dash-label">睡眠</div>
+            <div class="dash-value" id="dashSleep">0 分钟</div>
+            <div class="dash-sub" id="dashSleepDetail">0 次</div>
+          </div>
+          <div class="dash-card diaper" data-jump="diaper">
+            <div class="dash-icon">🧷</div>
+            <div class="dash-label">尿布</div>
+            <div class="dash-value" id="dashDiaper">0 次</div>
+            <div class="dash-sub" id="dashDiaperDetail">今日更换</div>
+          </div>
+          <div class="dash-card todo" data-jump="todo">
+            <div class="dash-icon">✅</div>
+            <div class="dash-label">待办</div>
+            <div class="dash-value" id="dashTodo">0 / 0</div>
+            <div class="dash-sub" id="dashTodoDetail">已完成 / 总数</div>
+          </div>
+        </div>
+
+        <div class="timeline-section">
+          <h2>📅 今日时间线</h2>
+          <div class="timeline" id="todayTimeline">
+            <div class="empty-state">暂无记录，快去添加第一条吧～</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 喝奶记录页 -->
+      <section class="page" id="page-feeding">
+        <header class="page-header">
+          <h1>🍼 喝奶记录</h1>
+          <p class="page-subtitle">24小时制精确到分钟 · 亲喂/瓶喂</p>
+        </header>
+
+        <div class="form-card">
+          <h3>新增喝奶记录</h3>
+          <div class="form-row">
+            <label>喂养时间</label>
+            <input type="time" id="feedTime" class="time-input">
+          </div>
+
+          <div class="form-row">
+            <label>喂养形式</label>
+            <div class="segmented" id="feedTypeSeg">
+              <button class="seg-btn active" data-value="bottle">🍼 瓶喂</button>
+              <button class="seg-btn" data-value="nursing">🤱 亲喂</button>
+            </div>
+          </div>
+
+          <!-- 瓶喂区域 -->
+          <div class="form-section" id="bottleSection">
+            <div class="form-row">
+              <label>喂养内容</label>
+              <div class="segmented" id="bottleContentSeg">
+                <button class="seg-btn active" data-value="母乳">母乳</button>
+                <button class="seg-btn" data-value="奶粉">奶粉</button>
+              </div>
+            </div>
+            <div class="form-row">
+              <label>奶量 (ml)</label>
+              <div class="number-input-group">
+                <button class="num-btn" data-target="feedAmount" data-step="-10">−</button>
+                <input type="number" id="feedAmount" min="0" max="500" value="120" class="number-input">
+                <button class="num-btn" data-target="feedAmount" data-step="10">+</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 亲喂区域 -->
+          <div class="form-section hidden" id="nursingSection">
+            <div class="form-row">
+              <label>喂养内容</label>
+              <div class="segmented" id="nursingContentSeg">
+                <button class="seg-btn active" data-value="母乳">母乳</button>
+              </div>
+            </div>
+            <div class="form-row">
+              <label>喂养侧别</label>
+              <div class="segmented" id="nursingSideSeg">
+                <button class="seg-btn active" data-value="左边">⬅️ 左边</button>
+                <button class="seg-btn" data-value="右边">➡️ 右边</button>
+              </div>
+            </div>
+            <div class="form-row">
+              <label>喂养时长</label>
+              <div class="duration-picker">
+                <button class="duration-btn" data-min="5">5分钟</button>
+                <button class="duration-btn" data-min="10">10分钟</button>
+                <button class="duration-btn active" data-min="15">15分钟</button>
+                <button class="duration-btn" data-min="20">20分钟</button>
+                <button class="duration-btn" data-min="25">25分钟</button>
+                <button class="duration-btn" data-min="30">30分钟</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label>备注</label>
+            <input type="text" id="feedNote" class="text-input" placeholder="选填，如宝宝状态">
+          </div>
+
+          <button class="submit-btn" id="submitFeeding">💾 保存记录</button>
+        </div>
+
+        <div class="summary-bar">
+          <span>今日喝奶 <strong id="feedingCount">0</strong> 次</span>
+          <span>总奶量 <strong id="feedingTotal">0</strong> ml</span>
+          <span>亲喂 <strong id="feedingNursing">0</strong> 次</span>
+          <span>瓶喂 <strong id="feedingBottle">0</strong> 次</span>
+        </div>
+
+        <div class="record-list" id="feedingList">
+          <div class="empty-state">还没有喝奶记录</div>
+        </div>
+      </section>
+
+      <!-- 吸奶记录页 -->
+      <section class="page" id="page-pumping">
+        <header class="page-header">
+          <h1>泵奶 吸奶记录</h1>
+          <p class="page-subtitle">记录妈妈吸奶 · 自动汇总日总量</p>
+        </header>
+
+        <div class="form-card">
+          <h3>新增吸奶记录</h3>
+          <div class="form-row">
+            <label>吸奶时间</label>
+            <input type="time" id="pumpTime" class="time-input">
+          </div>
+          <div class="form-row">
+            <label>左侧吸奶量 (ml)</label>
+            <div class="number-input-group">
+              <button class="num-btn" data-target="pumpLeft" data-step="-5">−</button>
+              <input type="number" id="pumpLeft" min="0" max="500" value="40" class="number-input">
+              <button class="num-btn" data-target="pumpLeft" data-step="5">+</button>
+            </div>
+          </div>
+          <div class="form-row">
+            <label>右侧吸奶量 (ml)</label>
+            <div class="number-input-group">
+              <button class="num-btn" data-target="pumpRight" data-step="-5">−</button>
+              <input type="number" id="pumpRight" min="0" max="500" value="40" class="number-input">
+              <button class="num-btn" data-target="pumpRight" data-step="5">+</button>
+            </div>
+          </div>
+          <div class="form-row">
+            <label>本次合计</label>
+            <div class="total-display"><span id="pumpSum">80</span> ml</div>
+          </div>
+          <div class="form-row">
+            <label>备注</label>
+            <input type="text" id="pumpNote" class="text-input" placeholder="选填">
+          </div>
+          <button class="submit-btn" id="submitPumping">💾 保存记录</button>
+        </div>
+
+        <div class="summary-bar pump-summary">
+          <span>今日吸奶 <strong id="pumpCount">0</strong> 次</span>
+          <span>左侧总量 <strong id="pumpLeftTotal">0</strong> ml</span>
+          <span>右侧总量 <strong id="pumpRightTotal">0</strong> ml</span>
+          <span>日总吸奶量 <strong id="pumpGrandTotal">0</strong> ml</span>
+        </div>
+
+        <div class="record-list" id="pumpingList">
+          <div class="empty-state">还没有吸奶记录</div>
+        </div>
+      </section>
+
+      <!-- 睡眠记录页 -->
+      <section class="page" id="page-sleep">
+        <header class="page-header">
+          <h1>😴 睡眠记录</h1>
+          <p class="page-subtitle">自动计算时长 · 汇总今日睡眠</p>
+        </header>
+
+        <div class="form-card">
+          <h3>新增睡眠记录</h3>
+          <div class="form-row">
+            <label>开始时间</label>
+            <input type="time" id="sleepStart" class="time-input">
+          </div>
+          <div class="form-row">
+            <label>结束时间</label>
+            <input type="time" id="sleepEnd" class="time-input">
+          </div>
+          <div class="form-row">
+            <label>睡眠时长</label>
+            <div class="total-display"><span id="sleepDuration">0</span> 分钟</div>
+          </div>
+          <div class="form-row">
+            <label>入睡方式</label>
+            <div class="segmented" id="sleepMethodSeg">
+              <button class="seg-btn active" data-value="自主入睡">自主入睡</button>
+              <button class="seg-btn" data-value="奶睡">奶睡</button>
+              <button class="seg-btn" data-value="抱睡">抱睡</button>
+            </div>
+          </div>
+          <div class="form-row">
+            <label>哄睡辅助</label>
+            <div class="segmented" id="sleepHelperSeg">
+              <button class="seg-btn active" data-value="妈妈">妈妈</button>
+              <button class="seg-btn" data-value="爸爸">爸爸</button>
+              <button class="seg-btn" data-value="爷爷奶奶">爷爷奶奶</button>
+              <button class="seg-btn" data-value="自己">自己</button>
+            </div>
+          </div>
+          <div class="form-row">
+            <label>有无哭闹</label>
+            <div class="segmented" id="sleepCrySeg">
+              <button class="seg-btn active" data-value="无">😊 无</button>
+              <button class="seg-btn" data-value="有">😢 有</button>
+            </div>
+          </div>
+          <div class="form-row">
+            <label>备注</label>
+            <input type="text" id="sleepNote" class="text-input" placeholder="选填">
+          </div>
+          <button class="submit-btn" id="submitSleep">💾 保存记录</button>
+        </div>
+
+        <div class="summary-bar sleep-summary">
+          <span>今日睡眠 <strong id="sleepCount">0</strong> 次</span>
+          <span>总时长 <strong id="sleepTotal">0</strong> 分钟</span>
+          <span>哭闹 <strong id="sleepCryCount">0</strong> 次</span>
+        </div>
+
+        <div class="record-list" id="sleepList">
+          <div class="empty-state">还没有睡眠记录</div>
+        </div>
+      </section>
+
+      <!-- 换尿布记录页 -->
+      <section class="page" id="page-diaper">
+        <header class="page-header">
+          <h1>🧷 换尿布记录</h1>
+          <p class="page-subtitle">追踪更换频率 · 湿/脏/混合</p>
+        </header>
+
+        <div class="form-card">
+          <h3>新增换尿布记录</h3>
+          <div class="form-row">
+            <label>更换时间</label>
+            <input type="time" id="diaperTime" class="time-input">
+          </div>
+          <div class="form-row">
+            <label>尿布类型</label>
+            <div class="segmented" id="diaperTypeSeg">
+              <button class="seg-btn active" data-value="湿了">💧 湿了</button>
+              <button class="seg-btn" data-value="脏了">💩 脏了</button>
+              <button class="seg-btn" data-value="混合">🔄 混合</button>
+            </div>
+          </div>
+          <div class="form-row">
+            <label>有无漏尿</label>
+            <div class="segmented" id="diaperLeakSeg">
+              <button class="seg-btn active" data-value="无">😊 无</button>
+              <button class="seg-btn" data-value="有">💦 有</button>
+            </div>
+          </div>
+          <div class="form-row">
+            <label>备注</label>
+            <input type="text" id="diaperNote" class="text-input" placeholder="选填">
+          </div>
+          <button class="submit-btn" id="submitDiaper">💾 保存记录</button>
+        </div>
+
+        <div class="summary-bar diaper-summary">
+          <span>今日更换 <strong id="diaperCount">0</strong> 次</span>
+          <span>湿了 <strong id="diaperWet">0</strong> 次</span>
+          <span>脏了 <strong id="diaperDirty">0</strong> 次</span>
+          <span>混合 <strong id="diaperMix">0</strong> 次</span>
+          <span>漏尿 <strong id="diaperLeak">0</strong> 次</span>
+        </div>
+
+        <div class="record-list" id="diaperList">
+          <div class="empty-state">还没有换尿布记录</div>
+        </div>
+      </section>
+
+      <!-- 今日待办页 -->
+      <section class="page" id="page-todo">
+        <header class="page-header">
+          <h1>✅ 今日待办</h1>
+          <p class="page-subtitle">自行添加 · 勾选完成</p>
+        </header>
+
+        <div class="form-card">
+          <h3>添加待办事项</h3>
+          <div class="todo-input-row">
+            <input type="text" id="todoInput" class="text-input" placeholder="如：洗澡、量体温、晒太阳...">
+            <button class="submit-btn inline" id="submitTodo">➕ 添加</button>
+          </div>
+          <div class="form-row">
+            <label>快捷添加</label>
+            <div class="quick-tags">
+              <button class="quick-tag" data-text="给宝宝洗澡">给宝宝洗澡</button>
+              <button class="quick-tag" data-text="量体温">量体温</button>
+              <button class="quick-tag" data-text="晒太阳">晒太阳</button>
+              <button class="quick-tag" data-text="抚触按摩">抚触按摩</button>
+              <button class="quick-tag" data-text="剪指甲">剪指甲</button>
+              <button class="quick-tag" data-text="补充维生素D">补充维生素D</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="summary-bar todo-summary">
+          <span>总计 <strong id="todoTotal">0</strong> 项</span>
+          <span>已完成 <strong id="todoDone">0</strong> 项</span>
+          <span>待完成 <strong id="todoPending">0</strong> 项</span>
+        </div>
+
+        <div class="record-list todo-list" id="todoList">
+          <div class="empty-state">还没有待办事项，快添加一个吧～</div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- 设置弹窗 -->
+  <div class="modal-overlay" id="settingsModal">
+    <div class="modal">
+      <h3>⚙️ 宝宝信息设置</h3>
+      <div class="form-row">
+        <label>宝宝昵称</label>
+        <input type="text" id="inputBabyName" class="text-input" placeholder="如：小豆丁">
+      </div>
+      <div class="form-row">
+        <label>出生日期</label>
+        <input type="date" id="inputBabyBirth" class="time-input">
+      </div>
+      <div class="modal-actions">
+        <button class="cancel-btn" id="cancelSettings">取消</button>
+        <button class="submit-btn" id="saveSettings">保存</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast 提示 -->
+  <div class="toast" id="toast"></div>
+
+  <script>/**
+ * 宝宝日常照护工作台 - 核心应用逻辑
+ * 所有数据通过 localStorage 本地留存
+ * 每日 0 点自动重置打卡状态
+ */
+
+const STORAGE_KEY = 'babyCareData';
+const PROFILE_KEY = 'babyCareProfile';
+
+// ===== 数据存储层 =====
+const Store = {
+  // 读取全部今日数据
+  getAll() {
+    const today = this.getTodayKey();
+    const raw = localStorage.getItem(STORAGE_KEY);
+    const allData = raw ? JSON.parse(raw) : {};
+    // 检查日期，自动重置
+    if (allData.date !== today) {
+      allData.date = today;
+      allData.feeding = [];
+      allData.pumping = [];
+      allData.sleep = [];
+      allData.diaper = [];
+      allData.todo = [];
+      this.saveAll(allData);
+    }
+    // 确保字段完整
+    return Object.assign({
+      date: today,
+      feeding: [],
+      pumping: [],
+      sleep: [],
+      diaper: [],
+      todo: []
+    }, allData);
+  },
+
+  saveAll(data) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  },
+
+  getTodayKey() {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  },
+
+  getProfile() {
+    const raw = localStorage.getItem(PROFILE_KEY);
+    return raw ? JSON.parse(raw) : { name: '宝宝', birth: '' };
+  },
+
+  saveProfile(p) {
+    localStorage.setItem(PROFILE_KEY, JSON.stringify(p));
+  }
+};
+
+// ===== 工具函数 =====
+function $(id) { return document.getElementById(id); }
+
+function toast(msg) {
+  const t = $('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+function formatTime(hhmm) {
+  return hhmm || '--:--';
+}
+
+function nowHHMM() {
+  const d = new Date();
+  return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+}
+
+function calcDuration(start, end) {
+  const [sh, sm] = start.split(':').map(Number);
+  const [eh, em] = end.split(':').map(Number);
+  let mins = (eh * 60 + em) - (sh * 60 + sm);
+  if (mins < 0) mins += 24 * 60; // 跨天
+  return mins;
+}
+
+function calcAge(birth) {
+  if (!birth) return '点击设置';
+  const b = new Date(birth);
+  const now = new Date();
+  const days = Math.floor((now - b) / 86400000);
+  if (days < 30) return `出生 ${days} 天`;
+  const months = Math.floor(days / 30);
+  const remainDays = days % 30;
+  if (months < 12) return `${months} 个月 ${remainDays} 天`;
+  const years = Math.floor(months / 12);
+  return `${years} 岁 ${months % 12} 个月`;
+}
+
+// ===== 导航切换 =====
+function switchPage(pageName) {
+  document.querySelectorAll('.nav-item').forEach(el => {
+    el.classList.toggle('active', el.dataset.page === pageName);
+  });
+  document.querySelectorAll('.page').forEach(el => {
+    el.classList.toggle('active', el.id === `page-${pageName}`);
+  });
+}
+
+// ===== 分段选择器通用处理 =====
+function initSegmented(containerId, onSelect) {
+  const container = $(containerId);
+  if (!container) return;
+  container.querySelectorAll('.seg-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      container.querySelectorAll('.seg-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      if (onSelect) onSelect(btn.dataset.value);
+    });
+  });
+}
+
+function getSegmentedValue(containerId) {
+  const active = $(containerId).querySelector('.seg-btn.active');
+  return active ? active.dataset.value : '';
+}
+
+// ===== 数字输入按钮 =====
+function initNumberButtons() {
+  document.querySelectorAll('.num-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target = $(btn.dataset.target);
+      const step = parseInt(btn.dataset.step);
+      let val = parseInt(target.value) || 0;
+      val = Math.max(parseInt(target.min) || 0, val + step);
+      if (target.max) val = Math.min(parseInt(target.max), val);
+      target.value = val;
+      target.dispatchEvent(new Event('input'));
+    });
+  });
+}
+
+// ===== 喝奶记录模块 =====
+const Feeding = {
+  state: {
+    type: 'bottle',
+    duration: 15
+  },
+
+  init() {
+    // 喂养形式切换
+    initSegmented('feedTypeSeg', (val) => {
+      this.state.type = val;
+      $('bottleSection').classList.toggle('hidden', val !== 'bottle');
+      $('nursingSection').classList.toggle('hidden', val !== 'nursing');
+    });
+
+    initSegmented('bottleContentSeg');
+    initSegmented('nursingContentSeg');
+    initSegmented('nursingSideSeg');
+
+    // 时长选择
+    document.querySelectorAll('.duration-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.duration-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        this.state.duration = parseInt(btn.dataset.min);
+      });
+    });
+
+    $('submitFeeding').addEventListener('click', () => this.add());
+  },
+
+  add() {
+    const time = $('feedTime').value;
+    if (!time) { toast('请选择喂养时间'); return; }
+
+    const note = $('feedNote').value.trim();
+    let record;
+
+    if (this.state.type === 'bottle') {
+      const content = getSegmentedValue('bottleContentSeg');
+      const amount = parseInt($('feedAmount').value) || 0;
+      record = { type: '瓶喂', content, amount, time, note };
+    } else {
+      const content = getSegmentedValue('nursingContentSeg');
+      const side = getSegmentedValue('nursingSideSeg');
+      const duration = this.state.duration;
+      record = { type: '亲喂', content, side, duration, amount: 0, time, note };
+    }
+
+    const data = Store.getAll();
+    data.feeding.push(record);
+    Store.saveAll(data);
+    $('feedNote').value = '';
+    this.render();
+    Dashboard.render();
+    toast('喝奶记录已保存 💾');
+  },
+
+  remove(idx) {
+    const data = Store.getAll();
+    data.feeding.splice(idx, 1);
+    Store.saveAll(data);
+    this.render();
+    Dashboard.render();
+  },
+
+  render() {
+    const data = Store.getAll();
+    const list = data.feeding.sort((a, b) => a.time > b.time ? -1 : 1);
+    const container = $('feedingList');
+
+    // 汇总
+    const bottleCount = list.filter(r => r.type === '瓶喂').length;
+    const nursingCount = list.filter(r => r.type === '亲喂').length;
+    const totalMl = list.filter(r => r.type === '瓶喂').reduce((s, r) => s + (r.amount || 0), 0);
+    $('feedingCount').textContent = list.length;
+    $('feedingTotal').textContent = totalMl;
+    $('feedingNursing').textContent = nursingCount;
+    $('feedingBottle').textContent = bottleCount;
+
+    if (list.length === 0) {
+      container.innerHTML = '<div class="empty-state">还没有喝奶记录</div>';
+      return;
+    }
+
+    container.innerHTML = list.map((r, i) => {
+      const originalIdx = data.feeding.indexOf(r);
+      let detail, tags = '';
+      if (r.type === '瓶喂') {
+        detail = `${r.content} ${r.amount}ml`;
+        tags = `<span class="tag ${r.content === '母乳' ? 'tag-breast' : 'tag-formula'}">${r.content}</span>`;
+      } else {
+        detail = `${r.side} ${r.duration}分钟`;
+        tags = `<span class="tag tag-breast">母乳</span><span class="tag ${r.side === '左边' ? 'tag-left' : 'tag-right'}">${r.side}</span><span class="tag tag-method">${r.duration}分钟</span>`;
+      }
+      const noteHtml = r.note ? `<div style="font-size:12px;color:var(--text-sub);margin-top:2px;">📝 ${r.note}</div>` : '';
+      return `
+        <div class="record-item">
+          <div class="record-main">
+            <div class="record-time">⏰ ${r.time}</div>
+            <div class="record-detail">${r.type} · ${detail}</div>
+            <div class="record-tags">${tags}</div>
+            ${noteHtml}
+          </div>
+          <button class="delete-btn" onclick="Feeding.remove(${originalIdx})">🗑</button>
+        </div>
+      `;
+    }).join('');
+  }
+};
+
+// ===== 吸奶记录模块 =====
+const Pumping = {
+  init() {
+    // 实时计算合计
+    ['pumpLeft', 'pumpRight'].forEach(id => {
+      $(id).addEventListener('input', () => this.updateSum());
+    });
+    $('submitPumping').addEventListener('click', () => this.add());
+  },
+
+  updateSum() {
+    const left = parseInt($('pumpLeft').value) || 0;
+    const right = parseInt($('pumpRight').value) || 0;
+    $('pumpSum').textContent = left + right;
+  },
+
+  add() {
+    const time = $('pumpTime').value;
+    if (!time) { toast('请选择吸奶时间'); return; }
+    const left = parseInt($('pumpLeft').value) || 0;
+    const right = parseInt($('pumpRight').value) || 0;
+    if (left + right === 0) { toast('请输入吸奶量'); return; }
+    const note = $('pumpNote').value.trim();
+
+    const data = Store.getAll();
+    data.pumping.push({ time, left, right, note });
+    Store.saveAll(data);
+    $('pumpNote').value = '';
+    this.render();
+    Dashboard.render();
+    toast('吸奶记录已保存 💾');
+  },
+
+  remove(idx) {
+    const data = Store.getAll();
+    data.pumping.splice(idx, 1);
+    Store.saveAll(data);
+    this.render();
+    Dashboard.render();
+  },
+
+  render() {
+    const data = Store.getAll();
+    const list = data.pumping.sort((a, b) => a.time > b.time ? -1 : 1);
+    const container = $('pumpingList');
+
+    const leftTotal = list.reduce((s, r) => s + r.left, 0);
+    const rightTotal = list.reduce((s, r) => s + r.right, 0);
+    const grandTotal = leftTotal + rightTotal;
+    $('pumpCount').textContent = list.length;
+    $('pumpLeftTotal').textContent = leftTotal;
+    $('pumpRightTotal').textContent = rightTotal;
+    $('pumpGrandTotal').textContent = grandTotal;
+
+    if (list.length === 0) {
+      container.innerHTML = '<div class="empty-state">还没有吸奶记录</div>';
+      return;
+    }
+
+    container.innerHTML = list.map((r) => {
+      const originalIdx = data.pumping.indexOf(r);
+      const sum = r.left + r.right;
+      const noteHtml = r.note ? `<div style="font-size:12px;color:var(--text-sub);margin-top:2px;">📝 ${r.note}</div>` : '';
+      return `
+        <div class="record-item">
+          <div class="record-main">
+            <div class="record-time">⏰ ${r.time}</div>
+            <div class="record-detail">左 ${r.left}ml + 右 ${r.right}ml = <strong style="color:var(--primary-dark)">${sum}ml</strong></div>
+            <div class="record-tags">
+              <span class="tag tag-left">左 ${r.left}ml</span>
+              <span class="tag tag-right">右 ${r.right}ml</span>
+            </div>
+            ${noteHtml}
+          </div>
+          <button class="delete-btn" onclick="Pumping.remove(${originalIdx})">🗑</button>
+        </div>
+      `;
+    }).join('');
+  }
+};
+
+// ===== 睡眠记录模块 =====
+const Sleep = {
+  init() {
+    initSegmented('sleepMethodSeg');
+    initSegmented('sleepHelperSeg');
+    initSegmented('sleepCrySeg');
+
+    // 实时计算时长
+    ['sleepStart', 'sleepEnd'].forEach(id => {
+      $(id).addEventListener('input', () => this.updateDuration());
+    });
+    $('submitSleep').addEventListener('click', () => this.add());
+  },
+
+  updateDuration() {
+    const start = $('sleepStart').value;
+    const end = $('sleepEnd').value;
+    if (start && end) {
+      $('sleepDuration').textContent = calcDuration(start, end);
+    } else {
+      $('sleepDuration').textContent = '0';
+    }
+  },
+
+  add() {
+    const start = $('sleepStart').value;
+    const end = $('sleepEnd').value;
+    if (!start || !end) { toast('请选择开始和结束时间'); return; }
+    const duration = calcDuration(start, end);
+    if (duration === 0) { toast('时长不能为0'); return; }
+
+    const method = getSegmentedValue('sleepMethodSeg');
+    const helper = getSegmentedValue('sleepHelperSeg');
+    const cry = getSegmentedValue('sleepCrySeg');
+    const note = $('sleepNote').value.trim();
+
+    const data = Store.getAll();
+    data.sleep.push({ start, end, duration, method, helper, cry, note });
+    Store.saveAll(data);
+    $('sleepNote').value = '';
+    this.render();
+    Dashboard.render();
+    toast('睡眠记录已保存 💾');
+  },
+
+  remove(idx) {
+    const data = Store.getAll();
+    data.sleep.splice(idx, 1);
+    Store.saveAll(data);
+    this.render();
+    Dashboard.render();
+  },
+
+  render() {
+    const data = Store.getAll();
+    const list = data.sleep.sort((a, b) => a.start > b.start ? -1 : 1);
+    const container = $('sleepList');
+
+    const totalMins = list.reduce((s, r) => s + r.duration, 0);
+    const cryCount = list.filter(r => r.cry === '有').length;
+    $('sleepCount').textContent = list.length;
+    $('sleepTotal').textContent = totalMins;
+    $('sleepCryCount').textContent = cryCount;
+
+    if (list.length === 0) {
+      container.innerHTML = '<div class="empty-state">还没有睡眠记录</div>';
+      return;
+    }
+
+    container.innerHTML = list.map((r) => {
+      const originalIdx = data.sleep.indexOf(r);
+      const noteHtml = r.note ? `<div style="font-size:12px;color:var(--text-sub);margin-top:2px;">📝 ${r.note}</div>` : '';
+      return `
+        <div class="record-item">
+          <div class="record-main">
+            <div class="record-time">😴 ${r.start} → 😊 ${r.end}</div>
+            <div class="record-detail">睡眠时长 <strong style="color:var(--primary-dark)">${r.duration}</strong> 分钟</div>
+            <div class="record-tags">
+              <span class="tag tag-method">${r.method}</span>
+              <span class="tag tag-helper">辅助: ${r.helper}</span>
+              <span class="tag ${r.cry === '有' ? 'tag-cry' : 'tag-nocry'}">${r.cry === '有' ? '😢 有哭闹' : '😊 无哭闹'}</span>
+            </div>
+            ${noteHtml}
+          </div>
+          <button class="delete-btn" onclick="Sleep.remove(${originalIdx})">🗑</button>
+        </div>
+      `;
+    }).join('');
+  }
+};
+
+// ===== 换尿布记录模块 =====
+const Diaper = {
+  init() {
+    initSegmented('diaperTypeSeg');
+    initSegmented('diaperLeakSeg');
+    $('submitDiaper').addEventListener('click', () => this.add());
+  },
+
+  add() {
+    const time = $('diaperTime').value;
+    if (!time) { toast('请选择更换时间'); return; }
+    const type = getSegmentedValue('diaperTypeSeg');
+    const leak = getSegmentedValue('diaperLeakSeg');
+    const note = $('diaperNote').value.trim();
+
+    const data = Store.getAll();
+    data.diaper.push({ time, type, leak, note });
+    Store.saveAll(data);
+    $('diaperNote').value = '';
+    this.render();
+    Dashboard.render();
+    toast('换尿布记录已保存 💾');
+  },
+
+  remove(idx) {
+    const data = Store.getAll();
+    data.diaper.splice(idx, 1);
+    Store.saveAll(data);
+    this.render();
+    Dashboard.render();
+  },
+
+  render() {
+    const data = Store.getAll();
+    const list = data.diaper.sort((a, b) => a.time > b.time ? -1 : 1);
+    const container = $('diaperList');
+
+    const wet = list.filter(r => r.type === '湿了').length;
+    const dirty = list.filter(r => r.type === '脏了').length;
+    const mix = list.filter(r => r.type === '混合').length;
+    const leakCount = list.filter(r => r.leak === '有').length;
+    $('diaperCount').textContent = list.length;
+    $('diaperWet').textContent = wet;
+    $('diaperDirty').textContent = dirty;
+    $('diaperMix').textContent = mix;
+    $('diaperLeak').textContent = leakCount;
+
+    if (list.length === 0) {
+      container.innerHTML = '<div class="empty-state">还没有换尿布记录</div>';
+      return;
+    }
+
+    container.innerHTML = list.map((r) => {
+      const originalIdx = data.diaper.indexOf(r);
+      const typeClass = r.type === '湿了' ? 'tag-wet' : (r.type === '脏了' ? 'tag-dirty' : 'tag-mix');
+      const noteHtml = r.note ? `<div style="font-size:12px;color:var(--text-sub);margin-top:2px;">📝 ${r.note}</div>` : '';
+      return `
+        <div class="record-item">
+          <div class="record-main">
+            <div class="record-time">⏰ ${r.time}</div>
+            <div class="record-detail">${r.type}</div>
+            <div class="record-tags">
+              <span class="tag ${typeClass}">${r.type}</span>
+              <span class="tag ${r.leak === '有' ? 'tag-leak' : 'tag-nocry'}">${r.leak === '有' ? '💦 漏尿' : '😊 无漏尿'}</span>
+            </div>
+            ${noteHtml}
+          </div>
+          <button class="delete-btn" onclick="Diaper.remove(${originalIdx})">🗑</button>
+        </div>
+      `;
+    }).join('');
+  }
+};
+
+// ===== 今日待办模块 =====
+const Todo = {
+  init() {
+    $('submitTodo').addEventListener('click', () => this.add());
+    $('todoInput').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') this.add();
+    });
+    // 快捷标签
+    document.querySelectorAll('.quick-tag').forEach(tag => {
+      tag.addEventListener('click', () => {
+        $('todoInput').value = tag.dataset.text;
+        this.add();
+      });
+    });
+  },
+
+  add() {
+    const text = $('todoInput').value.trim();
+    if (!text) { toast('请输入待办内容'); return; }
+    const data = Store.getAll();
+    data.todo.push({ text, done: false, time: nowHHMM() });
+    Store.saveAll(data);
+    $('todoInput').value = '';
+    this.render();
+    Dashboard.render();
+    toast('待办已添加 ✅');
+  },
+
+  toggle(idx) {
+    const data = Store.getAll();
+    if (data.todo[idx]) {
+      data.todo[idx].done = !data.todo[idx].done;
+      Store.saveAll(data);
+      this.render();
+      Dashboard.render();
+    }
+  },
+
+  remove(idx) {
+    const data = Store.getAll();
+    data.todo.splice(idx, 1);
+    Store.saveAll(data);
+    this.render();
+    Dashboard.render();
+  },
+
+  render() {
+    const data = Store.getAll();
+    const list = data.todo;
+    const container = $('todoList');
+
+    const done = list.filter(t => t.done).length;
+    $('todoTotal').textContent = list.length;
+    $('todoDone').textContent = done;
+    $('todoPending').textContent = list.length - done;
+
+    if (list.length === 0) {
+      container.innerHTML = '<div class="empty-state">还没有待办事项，快添加一个吧～</div>';
+      return;
+    }
+
+    container.innerHTML = list.map((t, i) => `
+      <div class="todo-item ${t.done ? 'done' : ''}">
+        <div class="todo-check ${t.done ? 'done' : ''}" onclick="Todo.toggle(${i})"></div>
+        <div class="todo-text">${t.text}</div>
+        <div class="todo-time">${t.time}</div>
+        <button class="delete-btn" onclick="Todo.remove(${i})">🗑</button>
+      </div>
+    `).join('');
+  }
+};
+
+// ===== 今日概览模块 =====
+const Dashboard = {
+  render() {
+    const data = Store.getAll();
+
+    // 喝奶
+    const feedList = data.feeding;
+    const feedMl = feedList.filter(r => r.type === '瓶喂').reduce((s, r) => s + (r.amount || 0), 0);
+    $('dashFeeding').textContent = `${feedList.length} 次`;
+    $('dashFeedingDetail').textContent = feedList.length > 0 ? `总奶量 ${feedMl}ml` : '暂无记录';
+
+    // 吸奶
+    const pumpTotal = data.pumping.reduce((s, r) => s + r.left + r.right, 0);
+    $('dashPumping').textContent = `${pumpTotal} ml`;
+    $('dashPumpingDetail').textContent = `${data.pumping.length} 次 · 今日总量`;
+
+    // 睡眠
+    const sleepTotal = data.sleep.reduce((s, r) => s + r.duration, 0);
+    $('dashSleep').textContent = `${sleepTotal} 分钟`;
+    $('dashSleepDetail').textContent = `${data.sleep.length} 次`;
+
+    // 尿布
+    $('dashDiaper').textContent = `${data.diaper.length} 次`;
+    $('dashDiaperDetail').textContent = '今日更换';
+
+    // 待办
+    const todoDone = data.todo.filter(t => t.done).length;
+    $('dashTodo').textContent = `${todoDone} / ${data.todo.length}`;
+    $('dashTodoDetail').textContent = '已完成 / 总数';
+
+    // 时间线
+    this.renderTimeline(data);
+  },
+
+  renderTimeline(data) {
+    const items = [];
+    data.feeding.forEach(r => items.push({ time: r.time, sort: r.time, icon: '🍼', text: `喝奶 · ${r.type} ${r.content || ''} ${r.amount ? r.amount+'ml' : (r.duration? r.duration+'分钟':'')}`, tag: r.type }));
+    data.pumping.forEach(r => items.push({ time: r.time, sort: r.time, icon: '泵奶', text: `吸奶 · 左${r.left}ml 右${r.right}ml`, tag: '吸奶' }));
+    data.sleep.forEach(r => items.push({ time: r.start, sort: r.start, icon: '😴', text: `睡眠 · ${r.start}-${r.end} (${r.duration}分钟)`, tag: '睡眠' }));
+    data.diaper.forEach(r => items.push({ time: r.time, sort: r.time, icon: '🧷', text: `换尿布 · ${r.type}`, tag: r.type }));
+
+    items.sort((a, b) => a.sort > b.sort ? -1 : 1);
+    const container = $('todayTimeline');
+
+    if (items.length === 0) {
+      container.innerHTML = '<div class="empty-state">暂无记录，快去添加第一条吧～</div>';
+      return;
+    }
+
+    container.innerHTML = items.map(it => `
+      <div class="timeline-item">
+        <div class="timeline-time">${it.time}</div>
+        <div class="timeline-content">${it.icon} ${it.text}</div>
+      </div>
+    `).join('');
+  }
+};
+
+// ===== 设置模块 =====
+const Settings = {
+  init() {
+    $('settingsBtn').addEventListener('click', () => this.open());
+    $('cancelSettings').addEventListener('click', () => this.close());
+    $('saveSettings').addEventListener('click', () => this.save());
+    $('settingsModal').addEventListener('click', (e) => {
+      if (e.target.id === 'settingsModal') this.close();
+    });
+    this.renderProfile();
+  },
+
+  open() {
+    const p = Store.getProfile();
+    $('inputBabyName').value = p.name || '';
+    $('inputBabyBirth').value = p.birth || '';
+    $('settingsModal').classList.add('show');
+  },
+
+  close() {
+    $('settingsModal').classList.remove('show');
+  },
+
+  save() {
+    const name = $('inputBabyName').value.trim() || '宝宝';
+    const birth = $('inputBabyBirth').value;
+    Store.saveProfile({ name, birth });
+    this.renderProfile();
+    this.close();
+    toast('设置已保存 ⚙️');
+  },
+
+  renderProfile() {
+    const p = Store.getProfile();
+    $('babyName').textContent = p.name || '宝宝';
+    $('babyAge').textContent = calcAge(p.birth);
+  }
+};
+
+// ===== 每日重置 =====
+function resetToday() {
+  const today = Store.getTodayKey();
+  const data = Store.getAll();
+  data.date = today;
+  data.feeding = [];
+  data.pumping = [];
+  data.sleep = [];
+  data.diaper = [];
+  data.todo = [];
+  Store.saveAll(data);
+  Feeding.render();
+  Pumping.render();
+  Sleep.render();
+  Diaper.render();
+  Todo.render();
+  Dashboard.render();
+  toast('今日打卡已重置 🔄');
+}
+
+// ===== 初始化 =====
+function init() {
+  // 设置默认时间为当前
+  const now = nowHHMM();
+  ['feedTime', 'pumpTime', 'diaperTime'].forEach(id => {
+    if ($(id)) $(id).value = now;
+  });
+
+  // 导航绑定
+  document.querySelectorAll('.nav-item').forEach(item => {
+    item.addEventListener('click', () => switchPage(item.dataset.page));
+  });
+
+  // 概览卡片跳转
+  document.querySelectorAll('.dash-card').forEach(card => {
+    card.addEventListener('click', () => switchPage(card.dataset.jump));
+  });
+
+  // 重置按钮
+  $('resetBtn').addEventListener('click', () => {
+    if (confirm('确定要重置今日所有打卡记录吗？此操作不可撤销。')) {
+      resetToday();
+    }
+  });
+
+  // 初始化各模块
+  Settings.init();
+  Feeding.init();
+  Pumping.init();
+  Sleep.init();
+  Diaper.init();
+  Todo.init();
+
+  // 渲染所有页面数据
+  Feeding.render();
+  Pumping.render();
+  Sleep.render();
+  Diaper.render();
+  Todo.render();
+  Dashboard.render();
+
+  // 显示今日日期
+  const d = new Date();
+  const weekDays = ['日', '一', '二', '三', '四', '五', '六'];
+  $('todayDate').textContent = `${d.getMonth()+1}月${d.getDate()}日 周${weekDays[d.getDay()]}`;
+
+  // 每日自动重置检测（每分钟检查一次日期变化）
+  let lastDate = Store.getTodayKey();
+  setInterval(() => {
+    const today = Store.getTodayKey();
+    if (today !== lastDate) {
+      lastDate = today;
+      resetToday();
+      toast('新的一天，打卡已自动重置 🌅');
+    }
+  }, 60000);
+
+  // 页面可见时也检查（从后台切回前台）
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) {
+      const today = Store.getTodayKey();
+      if (today !== lastDate) {
+        lastDate = today;
+        resetToday();
+      }
+    }
+  });
+}
+
+// 启动
+document.addEventListener('DOMContentLoaded', init);
+
+// ===== Service Worker 注册（实现离线访问） =====
+// SW removed for single-file version
+</script>
+</body>
+</html>
