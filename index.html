@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="宝宝照护">
+  <meta name="theme-color" content="#FF8FA3">
+  <title>宝宝日常照护工作台</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="apple-touch-icon" href="assets/icon.png">
+</head>
+<body>
+  <div class="app-container">
+    <!-- 左侧纵向导航栏 -->
+    <nav class="sidebar">
+      <div class="sidebar-header">
+        <div class="baby-avatar">👶</div>
+        <div class="baby-info">
+          <div class="baby-name" id="babyName">宝宝</div>
+          <div class="baby-age" id="babyAge">点击设置</div>
+        </div>
+        <button class="settings-btn" id="settingsBtn" title="设置">⚙️</button>
+      </div>
+
+      <ul class="nav-list">
+        <li class="nav-item active" data-page="dashboard">
+          <span class="nav-icon">🏠</span>
+          <span class="nav-label">今日概览</span>
+        </li>
+        <li class="nav-item" data-page="feeding">
+          <span class="nav-icon">🍼</span>
+          <span class="nav-label">喝奶记录</span>
+        </li>
+        <li class="nav-item" data-page="pumping">
+          <span class="nav-icon">泵奶</span>
+          <span class="nav-label">吸奶记录</span>
+        </li>
+        <li class="nav-item" data-page="sleep">
+          <span class="nav-icon">😴</span>
+          <span class="nav-label">睡眠记录</span>
+        </li>
+        <li class="nav-item" data-page="diaper">
+          <span class="nav-icon">🧷</span>
+          <span class="nav-label">换尿布</span>
+        </li>
+        <li class="nav-item" data-page="todo">
+          <span class="nav-icon">✅</span>
+          <span class="nav-label">今日待办</span>
+        </li>
+      </ul>
+
+      <div class="sidebar-footer">
+        <div class="date-display" id="todayDate"></div>
+        <button class="reset-btn" id="resetBtn" title="每日0点自动重置打卡，也可手动重置">🔄 重置打卡</button>
+      </div>
+    </nav>
+
+    <!-- 主内容区 -->
+    <main class="main-content">
+      <!-- 今日概览页 -->
+      <section class="page active" id="page-dashboard">
+        <header class="page-header">
+          <h1>今日概览</h1>
+          <p class="page-subtitle">宝宝的一日动态一目了然</p>
+        </header>
+        <div class="dashboard-grid">
+          <div class="dash-card feeding" data-jump="feeding">
+            <div class="dash-icon">🍼</div>
+            <div class="dash-label">喝奶</div>
+            <div class="dash-value" id="dashFeeding">0 次</div>
+            <div class="dash-sub" id="dashFeedingDetail">暂无记录</div>
+          </div>
+          <div class="dash-card pumping" data-jump="pumping">
+            <div class="dash-icon">泵奶</div>
+            <div class="dash-label">吸奶</div>
+            <div class="dash-value" id="dashPumping">0 ml</div>
+            <div class="dash-sub" id="dashPumpingDetail">今日总量</div>
+          </div>
+          <div class="dash-card sleep" data-jump="sleep">
+            <div class="dash-icon">😴</div>
+            <div class="dash-label">睡眠</div>
+            <div class="dash-value" id="dashSleep">0 分钟</div>
+            <div class="dash-sub" id="dashSleepDetail">0 次</div>
+          </div>
+          <div class="dash-card diaper" data-jump="diaper">
+            <div class="dash-icon">🧷</div>
+            <div class="dash-label">尿布</div>
+            <div class="dash-value" id="dashDiaper">0 次</div>
+            <div class="dash-sub" id="dashDiaperDetail">今日更换</div>
+          </div>
+          <div class="dash-card todo" data-jump="todo">
+            <div class="dash-icon">✅</div>
+            <div class="dash-label">待办</div>
+            <div class="dash-value" id="dashTodo">0 / 0</div>
+            <div class="dash-sub" id="dashTodoDetail">已完成 / 总数</div>
+          </div>
+        </div>
+
+        <div class="timeline-section">
+          <h2>📅 今日时间线</h2>
+          <div class="timeline" id="todayTimeline">
+            <div class="empty-state">暂无记录，快去添加第一条吧～</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 喝奶记录页 -->
+      <section class="page" id="page-feeding">
+        <header class="page-header">
+          <h1>🍼 喝奶记录</h1>
+          <p class="page-subtitle">24小时制精确到分钟 · 亲喂/瓶喂</p>
+        </header>
+
+        <div class="form-card">
+          <h3>新增喝奶记录</h3>
+          <div class="form-row">
+            <label>喂养时间</label>
+            <input type="time" id="feedTime" class="time-input">
+          </div>
+
+          <div class="form-row">
+            <label>喂养形式</label>
+            <div class="segmented" id="feedTypeSeg">
+              <button class="seg-btn active" data-value="bottle">🍼 瓶喂</button>
+              <button class="seg-btn" data-value="nursing">🤱 亲喂</button>
+            </div>
+          </div>
+
+          <!-- 瓶喂区域 -->
+          <div class="form-section" id="bottleSection">
+            <div class="form-row">
+              <label>喂养内容</label>
+              <div class="segmented" id="bottleContentSeg">
+                <button class="seg-btn active" data-value="母乳">母乳</button>
+                <button class="seg-btn" data-value="奶粉">奶粉</button>
+              </div>
+            </div>
+            <div class="form-row">
+              <label>奶量 (ml)</label>
+              <div class="number-input-group">
+                <button class="num-btn" data-target="feedAmount" data-step="-10">−</button>
+                <input type="number" id="feedAmount" min="0" max="500" value="120" class="number-input">
+                <button class="num-btn" data-target="feedAmount" data-step="10">+</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 亲喂区域 -->
+          <div class="form-section hidden" id="nursingSection">
+            <div class="form-row">
+              <label>喂养内容</label>
+              <div class="segmented" id="nursingContentSeg">
+                <button class="seg-btn active" data-value="母乳">母乳</button>
+              </div>
+            </div>
+            <div class="form-row">
+              <label>喂养侧别</label>
+              <div class="segmented" id="nursingSideSeg">
+                <button class="seg-btn active" data-value="左边">⬅️ 左边</button>
+                <button class="seg-btn" data-value="右边">➡️ 右边</button>
+              </div>
+            </div>
+            <div class="form-row">
+              <label>喂养时长</label>
+              <div class="duration-picker">
+                <button class="duration-btn" data-min="5">5分钟</button>
+                <button class="duration-btn" data-min="10">10分钟</button>
+                <button class="duration-btn active" data-min="15">15分钟</button>
+                <button class="duration-btn" data-min="20">20分钟</button>
+                <button class="duration-btn" data-min="25">25分钟</button>
+                <button class="duration-btn" data-min="30">30分钟</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label>备注</label>
+            <input type="text" id="feedNote" class="text-input" placeholder="选填，如宝宝状态">
+          </div>
+
+          <button class="submit-btn" id="submitFeeding">💾 保存记录</button>
+        </div>
+
+        <div class="summary-bar">
+          <span>今日喝奶 <strong id="feedingCount">0</strong> 次</span>
+          <span>总奶量 <strong id="feedingTotal">0</strong> ml</span>
+          <span>亲喂 <strong id="feedingNursing">0</strong> 次</span>
+          <span>瓶喂 <strong id="feedingBottle">0</strong> 次</span>
+        </div>
+
+        <div class="record-list" id="feedingList">
+          <div class="empty-state">还没有喝奶记录</div>
+        </div>
+      </section>
+
+      <!-- 吸奶记录页 -->
+      <section class="page" id="page-pumping">
+        <header class="page-header">
+          <h1>泵奶 吸奶记录</h1>
+          <p class="page-subtitle">记录妈妈吸奶 · 自动汇总日总量</p>
+        </header>
+
+        <div class="form-card">
+          <h3>新增吸奶记录</h3>
+          <div class="form-row">
+            <label>吸奶时间</label>
+            <input type="time" id="pumpTime" class="time-input">
+          </div>
+          <div class="form-row">
+            <label>左侧吸奶量 (ml)</label>
+            <div class="number-input-group">
+              <button class="num-btn" data-target="pumpLeft" data-step="-5">−</button>
+              <input type="number" id="pumpLeft" min="0" max="500" value="40" class="number-input">
+              <button class="num-btn" data-target="pumpLeft" data-step="5">+</button>
+            </div>
+          </div>
+          <div class="form-row">
+            <label>右侧吸奶量 (ml)</label>
+            <div class="number-input-group">
+              <button class="num-btn" data-target="pumpRight" data-step="-5">−</button>
+              <input type="number" id="pumpRight" min="0" max="500" value="40" class="number-input">
+              <button class="num-btn" data-target="pumpRight" data-step="5">+</button>
+            </div>
+          </div>
+          <div class="form-row">
+            <label>本次合计</label>
+            <div class="total-display"><span id="pumpSum">80</span> ml</div>
+          </div>
+          <div class="form-row">
+            <label>备注</label>
+            <input type="text" id="pumpNote" class="text-input" placeholder="选填">
+          </div>
+          <button class="submit-btn" id="submitPumping">💾 保存记录</button>
+        </div>
+
+        <div class="summary-bar pump-summary">
+          <span>今日吸奶 <strong id="pumpCount">0</strong> 次</span>
+          <span>左侧总量 <strong id="pumpLeftTotal">0</strong> ml</span>
+          <span>右侧总量 <strong id="pumpRightTotal">0</strong> ml</span>
+          <span>日总吸奶量 <strong id="pumpGrandTotal">0</strong> ml</span>
+        </div>
+
+        <div class="record-list" id="pumpingList">
+          <div class="empty-state">还没有吸奶记录</div>
+        </div>
+      </section>
+
+      <!-- 睡眠记录页 -->
+      <section class="page" id="page-sleep">
+        <header class="page-header">
+          <h1>😴 睡眠记录</h1>
+          <p class="page-subtitle">自动计算时长 · 汇总今日睡眠</p>
+        </header>
+
+        <div class="form-card">
+          <h3>新增睡眠记录</h3>
+          <div class="form-row">
+            <label>开始时间</label>
+            <input type="time" id="sleepStart" class="time-input">
+          </div>
+          <div class="form-row">
+            <label>结束时间</label>
+            <input type="time" id="sleepEnd" class="time-input">
+          </div>
+          <div class="form-row">
+            <label>睡眠时长</label>
+            <div class="total-display"><span id="sleepDuration">0</span> 分钟</div>
+          </div>
+          <div class="form-row">
+            <label>入睡方式</label>
+            <div class="segmented" id="sleepMethodSeg">
+              <button class="seg-btn active" data-value="自主入睡">自主入睡</button>
+              <button class="seg-btn" data-value="奶睡">奶睡</button>
+              <button class="seg-btn" data-value="抱睡">抱睡</button>
+            </div>
+          </div>
+          <div class="form-row">
+            <label>哄睡辅助</label>
+            <div class="segmented" id="sleepHelperSeg">
+              <button class="seg-btn active" data-value="妈妈">妈妈</button>
+              <button class="seg-btn" data-value="爸爸">爸爸</button>
+              <button class="seg-btn" data-value="爷爷奶奶">爷爷奶奶</button>
+              <button class="seg-btn" data-value="自己">自己</button>
+            </div>
+          </div>
+          <div class="form-row">
+            <label>有无哭闹</label>
+            <div class="segmented" id="sleepCrySeg">
+              <button class="seg-btn active" data-value="无">😊 无</button>
+              <button class="seg-btn" data-value="有">😢 有</button>
+            </div>
+          </div>
+          <div class="form-row">
+            <label>备注</label>
+            <input type="text" id="sleepNote" class="text-input" placeholder="选填">
+          </div>
+          <button class="submit-btn" id="submitSleep">💾 保存记录</button>
+        </div>
+
+        <div class="summary-bar sleep-summary">
+          <span>今日睡眠 <strong id="sleepCount">0</strong> 次</span>
+          <span>总时长 <strong id="sleepTotal">0</strong> 分钟</span>
+          <span>哭闹 <strong id="sleepCryCount">0</strong> 次</span>
+        </div>
+
+        <div class="record-list" id="sleepList">
+          <div class="empty-state">还没有睡眠记录</div>
+        </div>
+      </section>
+
+      <!-- 换尿布记录页 -->
+      <section class="page" id="page-diaper">
+        <header class="page-header">
+          <h1>🧷 换尿布记录</h1>
+          <p class="page-subtitle">追踪更换频率 · 湿/脏/混合</p>
+        </header>
+
+        <div class="form-card">
+          <h3>新增换尿布记录</h3>
+          <div class="form-row">
+            <label>更换时间</label>
+            <input type="time" id="diaperTime" class="time-input">
+          </div>
+          <div class="form-row">
+            <label>尿布类型</label>
+            <div class="segmented" id="diaperTypeSeg">
+              <button class="seg-btn active" data-value="湿了">💧 湿了</button>
+              <button class="seg-btn" data-value="脏了">💩 脏了</button>
+              <button class="seg-btn" data-value="混合">🔄 混合</button>
+            </div>
+          </div>
+          <div class="form-row">
+            <label>有无漏尿</label>
+            <div class="segmented" id="diaperLeakSeg">
+              <button class="seg-btn active" data-value="无">😊 无</button>
+              <button class="seg-btn" data-value="有">💦 有</button>
+            </div>
+          </div>
+          <div class="form-row">
+            <label>备注</label>
+            <input type="text" id="diaperNote" class="text-input" placeholder="选填">
+          </div>
+          <button class="submit-btn" id="submitDiaper">💾 保存记录</button>
+        </div>
+
+        <div class="summary-bar diaper-summary">
+          <span>今日更换 <strong id="diaperCount">0</strong> 次</span>
+          <span>湿了 <strong id="diaperWet">0</strong> 次</span>
+          <span>脏了 <strong id="diaperDirty">0</strong> 次</span>
+          <span>混合 <strong id="diaperMix">0</strong> 次</span>
+          <span>漏尿 <strong id="diaperLeak">0</strong> 次</span>
+        </div>
+
+        <div class="record-list" id="diaperList">
+          <div class="empty-state">还没有换尿布记录</div>
+        </div>
+      </section>
+
+      <!-- 今日待办页 -->
+      <section class="page" id="page-todo">
+        <header class="page-header">
+          <h1>✅ 今日待办</h1>
+          <p class="page-subtitle">自行添加 · 勾选完成</p>
+        </header>
+
+        <div class="form-card">
+          <h3>添加待办事项</h3>
+          <div class="todo-input-row">
+            <input type="text" id="todoInput" class="text-input" placeholder="如：洗澡、量体温、晒太阳...">
+            <button class="submit-btn inline" id="submitTodo">➕ 添加</button>
+          </div>
+          <div class="form-row">
+            <label>快捷添加</label>
+            <div class="quick-tags">
+              <button class="quick-tag" data-text="给宝宝洗澡">给宝宝洗澡</button>
+              <button class="quick-tag" data-text="量体温">量体温</button>
+              <button class="quick-tag" data-text="晒太阳">晒太阳</button>
+              <button class="quick-tag" data-text="抚触按摩">抚触按摩</button>
+              <button class="quick-tag" data-text="剪指甲">剪指甲</button>
+              <button class="quick-tag" data-text="补充维生素D">补充维生素D</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="summary-bar todo-summary">
+          <span>总计 <strong id="todoTotal">0</strong> 项</span>
+          <span>已完成 <strong id="todoDone">0</strong> 项</span>
+          <span>待完成 <strong id="todoPending">0</strong> 项</span>
+        </div>
+
+        <div class="record-list todo-list" id="todoList">
+          <div class="empty-state">还没有待办事项，快添加一个吧～</div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- 设置弹窗 -->
+  <div class="modal-overlay" id="settingsModal">
+    <div class="modal">
+      <h3>⚙️ 宝宝信息设置</h3>
+      <div class="form-row">
+        <label>宝宝昵称</label>
+        <input type="text" id="inputBabyName" class="text-input" placeholder="如：小豆丁">
+      </div>
+      <div class="form-row">
+        <label>出生日期</label>
+        <input type="date" id="inputBabyBirth" class="time-input">
+      </div>
+      <div class="modal-actions">
+        <button class="cancel-btn" id="cancelSettings">取消</button>
+        <button class="submit-btn" id="saveSettings">保存</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast 提示 -->
+  <div class="toast" id="toast"></div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
